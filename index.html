@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Muza Lit Library Demo</title>
+    <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+      body {
+        font-family: 'Google Sans', sans-serif;
+        margin: 0;
+        padding: 0 0 0 40px;
+      }
+      
+      h1 {
+        text-align: left;
+        margin: 20px;
+        font-size: 1.5em;
+        color: #666;
+        border-bottom: 1px solid #ddd;
+        padding-bottom: 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Music Track Demo</h1>
+    <music-track 
+      image-src="art/imag_1.jpg" 
+      title="Two cats" 
+      sub-title="2025"
+    ></music-track>
+
+    <h1>Music Section Demo</h1>
+    <music-section 
+      title="Featured Tracks" 
+      tracks='[
+        {"imageSrc": "art/imag_1.jpg", "title": "Two cats", "subTitle": "2023"},
+        {"imageSrc": "art/imag_2.jpg", "title": "Orange cat", "subTitle": "1944"},
+        {"imageSrc": "art/imag_3.jpg", "title": "Paper cat", "subTitle": "2002"}
+      ]'
+    ></music-section>
+
+    <script type="module">
+      import "./src/MusicTrack.ts";
+      import "./src/MusicSection.ts";
+    </script>
+  </body>
+</html>
