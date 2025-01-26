@@ -7,6 +7,7 @@ A lightweight web components library for displaying music tracks and sections us
 - `<music-track>` - Display individual music tracks with artwork
 - `<music-section>` - Create sections of multiple music tracks
 - `<music-sidebar>` - Navigation sidebar with customizable sections and menu items
+- `<music-topbar>` - Top navigation bar with search and volume controls
 
 ## Installation
 
@@ -19,6 +20,9 @@ npm install muza-lit-library
 Import and use the components in your HTML:
 
 ```html
+<!-- Top Navigation Bar -->
+<music-topbar></music-topbar>
+
 <!-- Single Track -->
 <music-track 
   image-src="art/track.jpg" 
@@ -62,6 +66,17 @@ Import and use the components in your HTML:
   ];
 </script>
 ```
+
+### Topbar Features
+
+The `<music-topbar>` component provides:
+- Search functionality with real-time updates
+- Volume control with slider
+- User menu icon
+- Emits events:
+  - `search-change`: When search input changes
+  - `volume-change`: When volume is adjusted
+  - `user-icon-click`: When user icon is clicked
 
 ### Sidebar Properties
 
