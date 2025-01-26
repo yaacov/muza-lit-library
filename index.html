@@ -11,17 +11,39 @@
         margin: 0;
         padding: 0;
         display: flex;
+        height: 100vh;
+        overflow: hidden;
       }
       
       .main {
         flex: 1;
         display: flex;
         flex-direction: column;
+        margin-left: 240px; /* Width of sidebar */
       }
 
       .content {
         flex: 1;
-        padding: 0 40px;
+        padding: 80px 40px 0; /* Top padding for topbar */
+        overflow-y: auto;
+        height: 100vh;
+        box-sizing: border-box;
+      }
+
+      music-sidebar {
+        position: fixed;
+        left: 0;
+        top: 0;
+        height: 100vh;
+        width: 240px;
+      }
+
+      music-topbar {
+        position: fixed;
+        right: 0;
+        top: 0;
+        left: 240px;
+        z-index: 100;
       }
     </style>
   </head>

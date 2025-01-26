@@ -2,6 +2,8 @@
 
 A lightweight web components library for displaying music tracks and sections using Lit.
 
+![Muza Library Screenshot](art/muza.png)
+
 ## Features
 
 - `<music-track>` - Display individual music tracks with artwork
