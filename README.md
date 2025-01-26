@@ -39,7 +39,7 @@ Import and use the components in your HTML:
 
 1. Clone the repository
 2. Install dependencies: `npm install`
-3. Start development server: `npm start`
+3. Start development server: `npm run dev`
 
 ## License
 
