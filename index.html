@@ -13,6 +13,12 @@
         display: flex;
       }
       
+      .main {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+      }
+
       .content {
         flex: 1;
         padding: 0 40px;
@@ -26,21 +32,32 @@
       id="sidebar">
     </music-sidebar>
 
-    <div class="content">
-      <music-section
-        title="Featured Tracks"
-        tracks='[
-          {"imageSrc": "art/imag_1.jpg", "title": "Two cats", "subTitle": "2023"},
-          {"imageSrc": "art/imag_2.jpg", "title": "Orange cat", "subTitle": "1944"},
-          {"imageSrc": "art/imag_3.jpg", "title": "Paper cat", "subTitle": "2002"}
-        ]'
-      ></music-section>
+    <div class="main">
+      <music-topbar></music-topbar>
+      <div class="content">
+        <music-section
+          title="Featured Tracks"
+          tracks='[
+            {"imageSrc": "art/imag_2.jpg", "title": "Orange cat", "subTitle": "1944"},
+            {"imageSrc": "art/imag_3.jpg", "title": "Paper cat", "subTitle": "2002"}
+          ]'
+        ></music-section>
+        <music-section
+          title="New Relases"
+          tracks='[
+            {"imageSrc": "art/imag_3.jpg", "title": "Paper cat", "subTitle": "2002"},
+            {"imageSrc": "art/imag_1.jpg", "title": "Two cats", "subTitle": "2023"},
+            {"imageSrc": "art/imag_2.jpg", "title": "Orange cat", "subTitle": "1944"}
+          ]'
+        ></music-section>
+      </div>
     </div>
 
     <script type="module">
       import "./src/MusicTrack.ts";
       import "./src/MusicSection.ts";
       import "./src/MusicSidebar.ts";
+      import "./src/MusicTopbar.ts";
 
       // Set the sections after the component is loaded
       document.addEventListener('DOMContentLoaded', () => {
@@ -56,7 +73,7 @@
           {
             title: 'Library',
             items: [
-              { icon: 'square-plus', text: 'Playlists' },
+              { icon: 'list', text: 'Playlists' },
               { icon: 'heart', text: 'Albums' },
               { icon: 'music', text: 'Artists' },
               { icon: 'headphones', text: 'Songs' }

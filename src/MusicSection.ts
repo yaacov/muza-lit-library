@@ -16,6 +16,9 @@ export class MusicSection extends LitElement {
       padding-bottom: 0.3rem;
       border-bottom: 1px solid #666;
       min-height: 32px;
+      border-top: 2px solid #666;
+      margin-top: 2rem;
+      padding-top: 0.5rem;
     }
 
     h2 {
@@ -39,8 +42,7 @@ export class MusicSection extends LitElement {
       padding: 6px 10px;
       border-radius: 6px;
       font-size: 12px;
-      align-self: flex-start;
-      height: fit-content;
+      align-self: center;
       border: none;
       cursor: pointer;
     }
