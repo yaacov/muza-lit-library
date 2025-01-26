@@ -4,44 +4,66 @@
     <meta charset="utf-8" />
     <title>Muza Lit Library Demo</title>
     <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <style>
       body {
         font-family: 'Google Sans', sans-serif;
         margin: 0;
-        padding: 0 0 0 40px;
+        padding: 0;
+        display: flex;
       }
       
-      h1 {
-        text-align: left;
-        margin: 20px;
-        font-size: 1.5em;
-        color: #666;
-        border-bottom: 1px solid #ddd;
-        padding-bottom: 10px;
+      .content {
+        flex: 1;
+        padding: 0 40px;
       }
     </style>
   </head>
   <body>
-    <h1>Music Track Demo</h1>
-    <music-track 
-      image-src="art/imag_1.jpg" 
-      title="Two cats" 
-      sub-title="2025"
-    ></music-track>
+    <music-sidebar
+      logo-src="art/logo.jpg"
+      logo-alt="Music Library"
+      id="sidebar">
+    </music-sidebar>
 
-    <h1>Music Section Demo</h1>
-    <music-section 
-      title="Featured Tracks" 
-      tracks='[
-        {"imageSrc": "art/imag_1.jpg", "title": "Two cats", "subTitle": "2023"},
-        {"imageSrc": "art/imag_2.jpg", "title": "Orange cat", "subTitle": "1944"},
-        {"imageSrc": "art/imag_3.jpg", "title": "Paper cat", "subTitle": "2002"}
-      ]'
-    ></music-section>
+    <div class="content">
+      <music-section
+        title="Featured Tracks"
+        tracks='[
+          {"imageSrc": "art/imag_1.jpg", "title": "Two cats", "subTitle": "2023"},
+          {"imageSrc": "art/imag_2.jpg", "title": "Orange cat", "subTitle": "1944"},
+          {"imageSrc": "art/imag_3.jpg", "title": "Paper cat", "subTitle": "2002"}
+        ]'
+      ></music-section>
+    </div>
 
     <script type="module">
       import "./src/MusicTrack.ts";
       import "./src/MusicSection.ts";
+      import "./src/MusicSidebar.ts";
+
+      // Set the sections after the component is loaded
+      document.addEventListener('DOMContentLoaded', () => {
+        const sidebar = document.getElementById('sidebar');
+        sidebar.sections = [
+          {
+            title: 'My Muza',
+            items: [
+              { icon: 'house', text: 'Home' },
+              { icon: 'search', text: 'Explore' }
+            ]
+          },
+          {
+            title: 'Library',
+            items: [
+              { icon: 'square-plus', text: 'Playlists' },
+              { icon: 'heart', text: 'Albums' },
+              { icon: 'music', text: 'Artists' },
+              { icon: 'headphones', text: 'Songs' }
+            ]
+          }
+        ];
+      });
     </script>
   </body>
 </html>

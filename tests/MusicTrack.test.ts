@@ -5,10 +5,10 @@ import { fixture, html } from "@open-wc/testing";
 describe("MusicTrack", () => {
   it("renders with default properties", async () => {
     const el = await fixture<MusicTrack>(html`<music-track></music-track>`);
-    
+
     // Wait for element to be updated
     await el.updateComplete;
-    
+
     expect(el.imageSrc).toBe("");
     expect(el.title).toBe("");
     expect(el.subTitle).toBe("");

@@ -1,7 +1,7 @@
-import { LitElement, html, css } from 'lit';
-import { customElement, property } from 'lit/decorators.js';
+import { LitElement, html, css } from "lit";
+import { customElement, property } from "lit/decorators.js";
 
-@customElement('music-section')
+@customElement("music-section")
 export class MusicSection extends LitElement {
   static styles = css`
     :host {
@@ -57,29 +57,33 @@ export class MusicSection extends LitElement {
   `;
 
   @property({ type: String })
-  title = '';
+  title = "";
 
   @property({ type: String })
-  subTitle = '';
+  subTitle = "";
 
   @property({ type: Array })
-  tracks: { imageSrc: string; title: string; subTitle: string; }[] = [];
+  tracks: { imageSrc: string; title: string; subTitle: string }[] = [];
 
   private handleShowAll() {
-    this.dispatchEvent(new CustomEvent('show-all', {
-      bubbles: true,
-      composed: true,
-      detail: { sectionTitle: this.title }
-    }));
+    this.dispatchEvent(
+      new CustomEvent("show-all", {
+        bubbles: true,
+        composed: true,
+        detail: { sectionTitle: this.title },
+      })
+    );
   }
 
   render() {
     return html`
       <div class="header">
         <h2>${this.title}</h2>
-        <button class="show-all-button" @click=${this.handleShowAll}>Show All</button>
+        <button class="show-all-button" @click=${this.handleShowAll}>
+          Show All
+        </button>
       </div>
-      ${this.subTitle ? html`<p>${this.subTitle}</p>` : ''}
+      ${this.subTitle ? html`<p>${this.subTitle}</p>` : ""}
       <div class="track-list">
         ${this.tracks.map(
           (track) => html`

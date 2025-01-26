@@ -55,7 +55,7 @@ export class MusicTrack extends LitElement {
     }
 
     .play-button::after {
-      content: '';
+      content: "";
       width: 0;
       height: 0;
       border-style: solid;
@@ -85,24 +85,24 @@ export class MusicTrack extends LitElement {
     }
   `;
 
-  @property({ type: String, attribute: 'image-src' })
-  imageSrc = '';
+  @property({ type: String, attribute: "image-src" })
+  imageSrc = "";
 
   @property({ type: String })
-  title = '';
+  title = "";
 
-  @property({ type: String, attribute: 'sub-title' })
-  subTitle = '';
+  @property({ type: String, attribute: "sub-title" })
+  subTitle = "";
 
   private handleTrackClick() {
-    const event = new CustomEvent('track-selected', {
+    const event = new CustomEvent("track-selected", {
       detail: {
         title: this.title,
         subTitle: this.subTitle,
-        imageSrc: this.imageSrc
+        imageSrc: this.imageSrc,
       },
       bubbles: true,
-      composed: true
+      composed: true,
     });
     this.dispatchEvent(event);
   }
