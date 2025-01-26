@@ -6,6 +6,7 @@ A lightweight web components library for displaying music tracks and sections us
 
 - `<music-track>` - Display individual music tracks with artwork
 - `<music-section>` - Create sections of multiple music tracks
+- `<music-sidebar>` - Navigation sidebar with customizable sections and menu items
 
 ## Installation
 
@@ -33,7 +34,45 @@ Import and use the components in your HTML:
     {"imageSrc": "art/track2.jpg", "title": "Track 2", "subTitle": "2023"}
   ]'
 ></music-section>
+
+<!-- Sidebar Navigation -->
+<music-sidebar
+  logo-src="art/logo.jpg"
+  logo-alt="Music Library">
+</music-sidebar>
+
+<script>
+  // Configure sidebar sections and items
+  const sidebar = document.querySelector('music-sidebar');
+  sidebar.sections = [
+    {
+      title: 'My Muza',
+      items: [
+        { icon: 'house', text: 'Home' },
+        { icon: 'search', text: 'Explore' }
+      ]
+    },
+    {
+      title: 'Library',
+      items: [
+        { icon: 'square-plus', text: 'Playlists' },
+        { icon: 'heart', text: 'Albums' }
+      ]
+    }
+  ];
+</script>
 ```
+
+### Sidebar Properties
+
+- `logo-src`: URL of the logo image
+- `logo-alt`: Alt text for the logo image
+- `sections`: Array of section objects containing:
+  - `title`: Section header text
+  - `items`: Array of menu items with:
+    - `icon`: Font Awesome icon name
+    - `text`: Menu item text
+    - `action`: Optional click handler function
 
 ## Development
 
