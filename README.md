@@ -1,5 +1,7 @@
 # Muza Lit Library
 
+[![npm version](https://badge.fury.io/js/@muza-music%2Fmuza-lit-library.svg)](https://badge.fury.io/js/@muza-music%2Fmuza-lit-library)
+
 A lightweight web components library for displaying music tracks and sections using Lit.
 
 ![Muza Library Screenshot](art/muza.png)
