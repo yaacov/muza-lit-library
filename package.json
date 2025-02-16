@@ -1,9 +1,22 @@
 {
-  "name": "muza-lit-library",
-  "private": true,
-  "version": "0.0.0",
+  "name": "@muza-music/muza-lit-library",
+  "version": "0.0.1",
+  "description": "A Lit-based music library components collection",
   "type": "module",
-  "main": "index.js",
+  "files": [
+    "dist"
+  ],
+  "main": "./dist/muza-lit-library.umd.cjs",
+  "module": "./dist/muza-lit-library.js",
+  "exports": {
+    ".": {
+      "import": "./dist/muza-lit-library.js",
+      "require": "./dist/muza-lit-library.umd.cjs"
+    }
+  },
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
