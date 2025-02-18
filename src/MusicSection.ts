@@ -6,26 +6,27 @@ export class MusicSection extends LitElement {
   static styles = css`
     :host {
       margin-bottom: 2rem;
+      flex:1;
     }
 
     .header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin: 0 16px 0.1rem 16px;
+      margin: 0 0 0.1rem 16px;
       padding-bottom: 0.3rem;
-      border-bottom: 1px solid #666;
+      border-bottom: 1px solid #a9a9a9;
       min-height: 32px;
-      border-top: 2px solid #666;
+      border-top: 2px solid #a9a9a9;
       margin-top: 2rem;
-      padding-top: 0.5rem;
+      padding-top: 0.3rem;
     }
 
     h2 {
       margin: 0;
       font-size: 18px;
       font-weight: 600;
-      color: #444;
+      color: #5f5f5f;
       flex-grow: 1;
       line-height: 32px;
     }
@@ -51,11 +52,30 @@ export class MusicSection extends LitElement {
       background-color: #ddd;
     }
 
-    .track-list {
-      display: flex;
+    .track-list{
       overflow-x: auto;
+      max-width:100%;
+      flex:1;
       padding: 0;
+      display: flex;
+    } 
+    
+    ::-webkit-scrollbar {
+        height: 9px;
     }
+    ::-webkit-scrollbar-button {
+        background: #eee;
+        width:0px;
+        border-radius: 100px;
+    }
+    ::-webkit-scrollbar-track-piece {
+      background: #c2c2c2;
+      border-radius: 100px;
+      }
+    ::-webkit-scrollbar-thumb {
+      background: #5f5f5f;
+      border-radius: 100px;
+    }​
   `;
 
   @property({ type: String })
@@ -86,16 +106,18 @@ export class MusicSection extends LitElement {
         </button>
       </div>
       ${this.subTitle ? html`<p>${this.subTitle}</p>` : ""}
-      <div class="track-list">
-        ${this.tracks.map(
-          (track) => html`
-            <music-track
-              image-src=${track.imageSrc}
-              title=${track.title}
-              sub-title=${track.subTitle}
-            ></music-track>
-          `
-        )}
+      <div class="tracks-container">
+        <div class="track-list">
+          ${this.tracks.map(
+      (track) => html`
+              <music-track
+                image-src=${track.imageSrc}
+                title=${track.title}
+                sub-title=${track.subTitle}
+              ></music-track>
+            `
+    )}
+        </div>
       </div>
     `;
   }

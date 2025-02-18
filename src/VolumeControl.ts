@@ -92,6 +92,8 @@ export class VolumeControl extends LitElement {
     const x = Math.max(minX, Math.min(maxX, e.clientX - rect.left));
     const percentage = ((x - minX) / (maxX - minX)) * 100;
     this.value = Math.round(percentage);
+    this.isMuted = false;
+
     this.dispatchVolumeChange();
   }
 
