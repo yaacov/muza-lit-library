@@ -19,7 +19,9 @@
         flex: 1;
         display: flex;
         flex-direction: column;
-        margin-left: 240px; /* Width of sidebar */
+        padding-left: 240px; /* Width of sidebar */
+        box-sizing:border-box;
+        max-width:100vw;
       }
 
       .content {
@@ -28,6 +30,7 @@
         overflow-y: auto;
         height: 100vh;
         box-sizing: border-box;
+        max-width:100%;
       }
 
       music-sidebar {
