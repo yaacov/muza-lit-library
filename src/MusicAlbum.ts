@@ -1,8 +1,8 @@
 import { LitElement, html, css } from "lit";
 import { customElement, property } from "lit/decorators.js";
 
-@customElement("music-track")
-export class MusicTrack extends LitElement {
+@customElement("music-album")
+export class MusicAlbum extends LitElement {
   static styles = css`
     :host {
       display: flex;
@@ -95,7 +95,7 @@ export class MusicTrack extends LitElement {
   subTitle = "";
 
   private handleTrackClick() {
-    const event = new CustomEvent("track-selected", {
+    const event = new CustomEvent("album-selected", {
       detail: {
         title: this.title,
         subTitle: this.subTitle,

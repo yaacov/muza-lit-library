@@ -52,7 +52,7 @@ export class MusicSection extends LitElement {
       background-color: #ddd;
     }
 
-    .track-list{
+    .album-list{
       overflow-x: auto;
       max-width:100%;
       flex:1;
@@ -68,7 +68,7 @@ export class MusicSection extends LitElement {
         width:0px;
         border-radius: 100px;
     }
-    ::-webkit-scrollbar-track-piece {
+    ::-webkit-scrollbar-album-piece {
       background: #c2c2c2;
       border-radius: 100px;
       }
@@ -85,7 +85,7 @@ export class MusicSection extends LitElement {
   subTitle = "";
 
   @property({ type: Array })
-  tracks: { imageSrc: string; title: string; subTitle: string }[] = [];
+  albums: { imageSrc: string; title: string; subTitle: string }[] = [];
 
   private handleShowAll() {
     this.dispatchEvent(
@@ -106,15 +106,15 @@ export class MusicSection extends LitElement {
         </button>
       </div>
       ${this.subTitle ? html`<p>${this.subTitle}</p>` : ""}
-      <div class="tracks-container">
-        <div class="track-list">
-          ${this.tracks.map(
-      (track) => html`
-              <music-track
-                image-src=${track.imageSrc}
-                title=${track.title}
-                sub-title=${track.subTitle}
-              ></music-track>
+      <div class="albums-container">
+        <div class="album-list">
+          ${this.albums.map(
+      (album) => html`
+              <music-album
+                image-src=${album.imageSrc}
+                title=${album.title}
+                sub-title=${album.subTitle}
+              ></music-album>
             `
     )}
         </div>
