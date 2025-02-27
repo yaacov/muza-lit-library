@@ -86,7 +86,7 @@ export class MusicSidebar extends LitElement {
     this.sections = [];
   }
 
-  willUpdate(changedProperties: Map<string, any>) {
+  willUpdate(changedProperties: Map<string, unknown>) {
     if (changedProperties.has("sections")) {
       // Ensure the component updates when sections change
       this.requestUpdate();

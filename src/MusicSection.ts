@@ -6,7 +6,7 @@ export class MusicSection extends LitElement {
   static styles = css`
     :host {
       margin-bottom: 2rem;
-      flex:1;
+      flex: 1;
     }
 
     .header {
@@ -52,30 +52,30 @@ export class MusicSection extends LitElement {
       background-color: #ddd;
     }
 
-    .album-list{
+    .album-list {
       overflow-x: auto;
-      max-width:100%;
-      flex:1;
+      max-width: 100%;
+      flex: 1;
       padding: 0;
       display: flex;
-    } 
-    
+    }
+
     ::-webkit-scrollbar {
-        height: 9px;
+      height: 9px;
     }
     ::-webkit-scrollbar-button {
-        background: #eee;
-        width:0px;
-        border-radius: 100px;
+      background: #eee;
+      width: 0px;
+      border-radius: 100px;
     }
     ::-webkit-scrollbar-album-piece {
       background: #c2c2c2;
       border-radius: 100px;
-      }
+    }
     ::-webkit-scrollbar-thumb {
       background: #5f5f5f;
       border-radius: 100px;
-    }​
+    }
   `;
 
   @property({ type: String })
@@ -109,14 +109,14 @@ export class MusicSection extends LitElement {
       <div class="albums-container">
         <div class="album-list">
           ${this.albums.map(
-      (album) => html`
+            (album) => html`
               <music-album
                 image-src=${album.imageSrc}
                 title=${album.title}
                 sub-title=${album.subTitle}
               ></music-album>
             `
-    )}
+          )}
         </div>
       </div>
     `;
