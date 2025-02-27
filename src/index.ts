@@ -1,4 +1,4 @@
-export { MusicTrack } from "./MusicTrack";
+export { MusicAlbum } from "./MusicAlbum";
 export { MusicSection } from "./MusicSection";
 export { MusicSidebar } from "./MusicSidebar";
 export { MusicTopbar } from "./MusicTopbar";
