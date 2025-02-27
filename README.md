@@ -2,14 +2,14 @@
 
 [![npm version](https://badge.fury.io/js/@muza-music%2Fmuza-lit-library.svg)](https://badge.fury.io/js/@muza-music%2Fmuza-lit-library)
 
-A lightweight web components library for displaying music tracks and sections using Lit.
+A lightweight web components library for displaying music albums and sections using Lit.
 
 ![Muza Library Screenshot](art/muza.png)
 
 ## Features
 
-- `<music-track>` - Display individual music tracks with artwork
-- `<music-section>` - Create sections of multiple music tracks
+- `<music-album` - Display individual music albums with artwork
+- `<music-section>` - Create sections of multiple music albums
 - `<music-sidebar>` - Navigation sidebar with customizable sections and menu items
 - `<music-topbar>` - Top navigation bar with search and volume controls
 
@@ -27,19 +27,19 @@ Import and use the components in your HTML:
 <!-- Top Navigation Bar -->
 <music-topbar></music-topbar>
 
-<!-- Single Track -->
-<music-track 
-  image-src="art/track.jpg" 
-  title="Track Title" 
+<!-- Single Album -->
+<music-album 
+  image-src="art/album.jpg" 
+  title="Album Title" 
   sub-title="2023"
-></music-track>
+></music-album>
 
-<!-- Track Section -->
+<!-- Album Section -->
 <music-section 
-  title="Featured Tracks" 
-  tracks='[
-    {"imageSrc": "art/track1.jpg", "title": "Track 1", "subTitle": "2023"},
-    {"imageSrc": "art/track2.jpg", "title": "Track 2", "subTitle": "2023"}
+  title="Featured Albums" 
+  albums='[
+    {"imageSrc": "art/album1.jpg", "title": "Album 1", "subTitle": "2023"},
+    {"imageSrc": "art/album2.jpg", "title": "Album 2", "subTitle": "2023"}
   ]'
 ></music-section>
 
