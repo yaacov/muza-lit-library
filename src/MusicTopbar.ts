@@ -81,19 +81,19 @@ export class MusicTopbar extends LitElement {
   }
 
   private userIconClick() {
-    const event = new CustomEvent('user-icon-click', {
+    const event = new CustomEvent("user-icon-click", {
       bubbles: true,
-      composed: true
+      composed: true,
     });
     this.dispatchEvent(event);
   }
 
   private handleSearch(e: Event) {
     const searchText = (e.target as HTMLInputElement).value;
-    const event = new CustomEvent('search-change', {
+    const event = new CustomEvent("search-change", {
       detail: { searchText },
       bubbles: true,
-      composed: true
+      composed: true,
     });
     this.dispatchEvent(event);
   }
@@ -107,9 +107,9 @@ export class MusicTopbar extends LitElement {
       <div class="topbar">
         <div class="search-container">
           <i class="fa-solid fa-search"></i>
-          <input 
-            type="text" 
-            placeholder="Artist / Album / Song" 
+          <input
+            type="text"
+            placeholder="Artist / Album / Song"
             @input=${this.handleSearch}
           />
         </div>

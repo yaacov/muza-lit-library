@@ -76,10 +76,10 @@ export class VolumeControl extends LitElement {
   }
 
   private dispatchVolumeChange() {
-    const event = new CustomEvent('volume-change', {
+    const event = new CustomEvent("volume-change", {
       detail: { value: this.value },
       bubbles: true,
-      composed: true
+      composed: true,
     });
     this.dispatchEvent(event);
   }
@@ -99,15 +99,15 @@ export class VolumeControl extends LitElement {
 
   private handleMouseDown = () => {
     this.isDragging = true;
-    window.addEventListener('mousemove', this.handleMouseMove);
-    window.addEventListener('mouseup', this.handleMouseUp);
+    window.addEventListener("mousemove", this.handleMouseMove);
+    window.addEventListener("mouseup", this.handleMouseUp);
   };
 
   private handleMouseMove = (e: MouseEvent) => {
     if (!this.isDragging) return;
-    const slider = this.shadowRoot?.querySelector('.slider');
+    const slider = this.shadowRoot?.querySelector(".slider");
     if (!slider) return;
-    
+
     const rect = slider.getBoundingClientRect();
     const handleRadius = 6;
     const minX = handleRadius;
@@ -120,8 +120,8 @@ export class VolumeControl extends LitElement {
 
   private handleMouseUp = () => {
     this.isDragging = false;
-    window.removeEventListener('mousemove', this.handleMouseMove);
-    window.removeEventListener('mouseup', this.handleMouseUp);
+    window.removeEventListener("mousemove", this.handleMouseMove);
+    window.removeEventListener("mouseup", this.handleMouseUp);
   };
 
   private mapValueToPosition(value: number): number {
@@ -134,10 +134,7 @@ export class VolumeControl extends LitElement {
         rel="stylesheet"
         href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
       />
-      <i
-        class="fa-solid fa-speaker volume-icon"
-        @click=${this.toggleMute}
-      ></i>
+      <i class="fa-solid fa-speaker volume-icon" @click=${this.toggleMute}></i>
       <i
         class="fa-solid fa-${this.getVolumeIcon()} volume-icon"
         @click=${this.toggleMute}
@@ -145,7 +142,13 @@ export class VolumeControl extends LitElement {
       <div class="slider" @click=${this.handleSliderClick}>
         <svg viewBox="0 0 100 24">
           <line class="track" x1="2" y1="12" x2="98" y2="12" />
-          <line class="fill" x1="2" y1="12" x2="${this.mapValueToPosition(this.value)}" y2="12" />
+          <line
+            class="fill"
+            x1="2"
+            y1="12"
+            x2="${this.mapValueToPosition(this.value)}"
+            y2="12"
+          />
           <circle
             class="handle"
             cx="${this.mapValueToPosition(this.value)}"
