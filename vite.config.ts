@@ -18,12 +18,11 @@ export default defineConfig({
     open: true
   },
   test: {
-    globals: true,
     environment: 'happy-dom',
-    include: ['tests/*.{test,spec}.{js,ts}'],
     coverage: {
       provider: 'v8',
       reporter: ['text', 'json', 'html'],
     },
+    globals: true
   }
 });
