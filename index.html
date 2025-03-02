@@ -60,8 +60,9 @@
     <div class="main">
       <music-topbar></music-topbar>
       <music-player></music-player>
-      <div class="content">
 
+      <div class="content">
+        <song-line></song-line>
         <music-section
           title="Featured Albums"
           albums='[
@@ -101,7 +102,8 @@
       import "./src/MusicSection.ts";
       import "./src/MusicSidebar.ts";
       import "./src/MusicTopbar.ts";
-      import "./src/MusicPlayer.ts"
+      import "./src/MusicPlayer.ts";
+      import "./src/SongLine.ts"
       // Set the sections after the component is loaded
       document.addEventListener('DOMContentLoaded', () => {
         const sidebar = document.getElementById('sidebar');
