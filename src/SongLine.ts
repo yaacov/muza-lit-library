@@ -1,12 +1,15 @@
 import { LitElement, html, css } from 'lit';
 import { customElement, property } from "lit/decorators.js";
-
+interface SongDetails {
+  number: number;
+  title: string;
+  time: number;
+}
 
 @customElement("song-line")
 export class SongLine extends LitElement {
-    @property({ type: Number, attribute: "song-number" })number = 0;
-    @property({ type: String, attribute: "song-title" })title = "dsdsd";
-    @property({ type: Number, attribute: "song-time" })time = 100;
+    @property({ type: Object, attribute: "song-details" })details: SongDetails = { number: 0, title: "song", time: 200 };
+  
   static styles = css`
     :host {
       display: flex;
@@ -83,11 +86,11 @@ export class SongLine extends LitElement {
       <div class="song-row" @click=${this.songLineClick} >
         <div class="text">
 
-        <span class="song-number">${String(this.number).padStart(2, '0')}</span>
+        <span class="song-number">${String(this.details.number).padStart(2, '0')}</span>
         <span class="play-sign">&#x23F5;</span>
-        <span class="song-title">${this.title}</span>
+        <span class="song-title">${this.details.title}</span>
         </div>
-        <span class="song-time">${Math.round(this.time/60)}:${this.time%60}</span>
+        <span class="song-time">${Math.round(this.details.time/60)}:${this.details.time%60}</span>
       </div>
     `;
   }
