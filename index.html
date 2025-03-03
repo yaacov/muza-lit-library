@@ -59,12 +59,34 @@
 
     <div class="main">
       <music-topbar></music-topbar>
+
+
+
       <div class="content">
+        <song-line id="song1"></song-line>
+
+
         <music-section
           title="Featured Albums"
           albums='[
             {"imageSrc": "art/imag_2.jpg", "title": "Orange cat", "subTitle": "1944"},
             {"imageSrc": "art/imag_3.jpg", "title": "Paper cat", "subTitle": "2002"}
+          ]'
+        ></music-section>
+        <music-section
+          title="New Relases"
+          albums='[
+            {"imageSrc": "art/imag_3.jpg", "title": "Paper cat", "subTitle": "2002"},
+            {"imageSrc": "art/imag_1.jpg", "title": "Two cats", "subTitle": "2023"},
+            {"imageSrc": "art/imag_2.jpg", "title": "Orange cat", "subTitle": "1944"}
+          ]'
+        ></music-section>
+        <music-section
+          title="New Relases"
+          albums='[
+            {"imageSrc": "art/imag_3.jpg", "title": "Paper cat", "subTitle": "2002"},
+            {"imageSrc": "art/imag_1.jpg", "title": "Two cats", "subTitle": "2023"},
+            {"imageSrc": "art/imag_2.jpg", "title": "Orange cat", "subTitle": "1944"}
           ]'
         ></music-section>
         <music-section
@@ -83,10 +105,14 @@
       import "./src/MusicSection.ts";
       import "./src/MusicSidebar.ts";
       import "./src/MusicTopbar.ts";
+      import "./src/SongLine.ts"
+
 
       // Set the sections after the component is loaded
       document.addEventListener('DOMContentLoaded', () => {
         const sidebar = document.getElementById('sidebar');
+        document.getElementById('song2');
+
         sidebar.sections = [
           {
             title: 'My Muza',
@@ -106,6 +132,7 @@
           }
         ];
       });
+
     </script>
   </body>
 </html>
