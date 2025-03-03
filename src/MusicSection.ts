@@ -1,7 +1,7 @@
-import { LitElement, html, css } from "lit";
-import { customElement, property } from "lit/decorators.js";
+import { LitElement, html, css } from 'lit';
+import { customElement, property } from 'lit/decorators.js';
 
-@customElement("music-section")
+@customElement('music-section')
 export class MusicSection extends LitElement {
   static styles = css`
     :host {
@@ -79,21 +79,33 @@ export class MusicSection extends LitElement {
   `;
 
   @property({ type: String })
-  title = "";
+  title = '';
 
   @property({ type: String })
-  subTitle = "";
+  subTitle = '';
 
   @property({ type: Array })
   albums: { imageSrc: string; title: string; subTitle: string }[] = [];
 
   private handleShowAll() {
     this.dispatchEvent(
-      new CustomEvent("show-all", {
+      new CustomEvent('show-all', {
         bubbles: true,
         composed: true,
         detail: { sectionTitle: this.title },
       })
+    );
+  }
+
+  private renderAlbums() {
+    return this.albums.map(
+      (album) => html`
+        <music-album
+          image-src=${album.imageSrc}
+          title=${album.title}
+          sub-title=${album.subTitle}
+        ></music-album>
+      `
     );
   }
 
@@ -105,19 +117,9 @@ export class MusicSection extends LitElement {
           Show All
         </button>
       </div>
-      ${this.subTitle ? html`<p>${this.subTitle}</p>` : ""}
+      ${this.subTitle ? html`<p>${this.subTitle}</p>` : ''}
       <div class="albums-container">
-        <div class="album-list">
-          ${this.albums.map(
-            (album) => html`
-              <music-album
-                image-src=${album.imageSrc}
-                title=${album.title}
-                sub-title=${album.subTitle}
-              ></music-album>
-            `
-          )}
-        </div>
+        <div class="album-list">${this.renderAlbums()}</div>
       </div>
     `;
   }

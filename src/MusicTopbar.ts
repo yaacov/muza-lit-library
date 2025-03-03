@@ -1,9 +1,9 @@
-import { LitElement, html, css } from "lit";
-import { customElement, state } from "lit/decorators.js";
+import { LitElement, html, css } from 'lit';
+import { customElement, state } from 'lit/decorators.js';
 
-import "./VolumeControl";
+import './VolumeControl';
 
-@customElement("music-topbar")
+@customElement('music-topbar')
 export class MusicTopbar extends LitElement {
   static styles = css`
     :host {
@@ -81,7 +81,7 @@ export class MusicTopbar extends LitElement {
   }
 
   private userIconClick() {
-    const event = new CustomEvent("user-icon-click", {
+    const event = new CustomEvent('user-icon-click', {
       bubbles: true,
       composed: true,
     });
@@ -90,7 +90,7 @@ export class MusicTopbar extends LitElement {
 
   private handleSearch(e: Event) {
     const searchText = (e.target as HTMLInputElement).value;
-    const event = new CustomEvent("search-change", {
+    const event = new CustomEvent('search-change', {
       detail: { searchText },
       bubbles: true,
       composed: true,
