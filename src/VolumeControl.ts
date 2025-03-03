@@ -1,7 +1,7 @@
-import { LitElement, html, css } from "lit";
-import { customElement, property, state } from "lit/decorators.js";
+import { LitElement, html, css } from 'lit';
+import { customElement, property, state } from 'lit/decorators.js';
 
-@customElement("volume-control")
+@customElement('volume-control')
 export class VolumeControl extends LitElement {
   static styles = css`
     :host {
@@ -59,9 +59,9 @@ export class VolumeControl extends LitElement {
   private isDragging = false;
 
   private getVolumeIcon() {
-    if (this.value === 0 || this.isMuted) return "volume-xmark";
-    if (this.value < 50) return "volume-low";
-    return "volume-high";
+    if (this.value === 0 || this.isMuted) return 'volume-xmark';
+    if (this.value < 50) return 'volume-low';
+    return 'volume-high';
   }
 
   private toggleMute() {
@@ -76,7 +76,7 @@ export class VolumeControl extends LitElement {
   }
 
   private dispatchVolumeChange() {
-    const event = new CustomEvent("volume-change", {
+    const event = new CustomEvent('volume-change', {
       detail: { value: this.value },
       bubbles: true,
       composed: true,
@@ -99,13 +99,13 @@ export class VolumeControl extends LitElement {
 
   private handleMouseDown = () => {
     this.isDragging = true;
-    window.addEventListener("mousemove", this.handleMouseMove);
-    window.addEventListener("mouseup", this.handleMouseUp);
+    window.addEventListener('mousemove', this.handleMouseMove);
+    window.addEventListener('mouseup', this.handleMouseUp);
   };
 
   private handleMouseMove = (e: MouseEvent) => {
     if (!this.isDragging) return;
-    const slider = this.shadowRoot?.querySelector(".slider");
+    const slider = this.shadowRoot?.querySelector('.slider');
     if (!slider) return;
 
     const rect = slider.getBoundingClientRect();
@@ -120,8 +120,8 @@ export class VolumeControl extends LitElement {
 
   private handleMouseUp = () => {
     this.isDragging = false;
-    window.removeEventListener("mousemove", this.handleMouseMove);
-    window.removeEventListener("mouseup", this.handleMouseUp);
+    window.removeEventListener('mousemove', this.handleMouseMove);
+    window.removeEventListener('mouseup', this.handleMouseUp);
   };
 
   private mapValueToPosition(value: number): number {

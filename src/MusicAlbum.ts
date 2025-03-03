@@ -1,7 +1,7 @@
-import { LitElement, html, css } from "lit";
-import { customElement, property } from "lit/decorators.js";
+import { LitElement, html, css } from 'lit';
+import { customElement, property } from 'lit/decorators.js';
 
-@customElement("music-album")
+@customElement('music-album')
 export class MusicAlbum extends LitElement {
   static styles = css`
     :host {
@@ -55,7 +55,7 @@ export class MusicAlbum extends LitElement {
     }
 
     .play-button::after {
-      content: "";
+      content: '';
       width: 0;
       height: 0;
       border-style: solid;
@@ -85,17 +85,17 @@ export class MusicAlbum extends LitElement {
     }
   `;
 
-  @property({ type: String, attribute: "image-src" })
-  imageSrc = "";
+  @property({ type: String, attribute: 'image-src' })
+  imageSrc = '';
 
   @property({ type: String })
-  title = "";
+  title = '';
 
-  @property({ type: String, attribute: "sub-title" })
-  subTitle = "";
+  @property({ type: String, attribute: 'sub-title' })
+  subTitle = '';
 
   private handleTrackClick() {
-    const event = new CustomEvent("album-selected", {
+    const event = new CustomEvent('album-selected', {
       detail: {
         title: this.title,
         subTitle: this.subTitle,

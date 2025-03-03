@@ -1,5 +1,5 @@
-import { LitElement, html, css } from "lit";
-import { customElement, property } from "lit/decorators.js";
+import { LitElement, html, css } from 'lit';
+import { customElement, property } from 'lit/decorators.js';
 
 interface MenuItem {
   icon: string;
@@ -12,7 +12,7 @@ interface Section {
   items: MenuItem[];
 }
 
-@customElement("music-sidebar")
+@customElement('music-sidebar')
 export class MusicSidebar extends LitElement {
   static styles = css`
     :host {
@@ -72,11 +72,11 @@ export class MusicSidebar extends LitElement {
     }
   `;
 
-  @property({ type: String, attribute: "logo-src" })
-  logoSrc = "";
+  @property({ type: String, attribute: 'logo-src' })
+  logoSrc = '';
 
-  @property({ type: String, attribute: "logo-alt" })
-  logoAlt = "Logo";
+  @property({ type: String, attribute: 'logo-alt' })
+  logoAlt = 'Logo';
 
   @property({ type: Array })
   sections: Section[] = [];
@@ -87,7 +87,7 @@ export class MusicSidebar extends LitElement {
   }
 
   willUpdate(changedProperties: Map<string, unknown>) {
-    if (changedProperties.has("sections")) {
+    if (changedProperties.has('sections')) {
       // Ensure the component updates when sections change
       this.requestUpdate();
     }
@@ -99,7 +99,35 @@ export class MusicSidebar extends LitElement {
     }
   }
 
+  private handleMenuItemClick(item: MenuItem) {
+    this.handleItemClick(item.action);
+  }
+
+  private renderMenuItem(item: MenuItem) {
+    return html`
+      <a class="menu-item" @click=${() => this.handleMenuItemClick(item)}>
+        <i class="fa-solid fa-${item.icon}"></i>
+        <span>${item.text}</span>
+      </a>
+    `;
+  }
+
+  private renderSection(section: Section) {
+    const menuItems = section.items.map((item) => this.renderMenuItem(item));
+
+    return html`
+      <div class="section">
+        <div class="section-title">${section.title}</div>
+        ${menuItems}
+      </div>
+    `;
+  }
+
   render() {
+    const sectionElements = this.sections.map((section) =>
+      this.renderSection(section)
+    );
+
     return html`
       <link
         rel="stylesheet"
@@ -109,24 +137,7 @@ export class MusicSidebar extends LitElement {
         <img src="${this.logoSrc}" alt="${this.logoAlt}" />
       </div>
 
-      ${this.sections.map(
-        (section) => html`
-          <div class="section">
-            <div class="section-title">${section.title}</div>
-            ${section.items.map(
-              (item) => html`
-                <a
-                  class="menu-item"
-                  @click=${() => this.handleItemClick(item.action)}
-                >
-                  <i class="fa-solid fa-${item.icon}"></i>
-                  <span>${item.text}</span>
-                </a>
-              `
-            )}
-          </div>
-        `
-      )}
+      ${sectionElements}
     `;
   }
 }
