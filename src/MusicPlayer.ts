@@ -104,6 +104,7 @@ export class MusicPlayer extends LitElement{
     font-size: 0.5em;
     }
   `;
+  // controllers events 
   private _onPrevious() {
     this.dispatchEvent(new CustomEvent('previous-track', {
         bubbles: true,
@@ -126,6 +127,7 @@ private _onNext() {
         composed: true
     }));
 }
+//progress bar events
 private _isDragging = false;
 
 private _onStartDrag(e: MouseEvent) {
@@ -184,9 +186,9 @@ private _updateTimeFromClick(e: MouseEvent) {
             
             </div>
             <div class="controls">
-                 <button @click=${this._onPrevious}>⏮</button>
-            <button @click=${this._onPlayPause}>${this.isPlaying ? '⏸' : '▶'}</button>
-            <button @click=${this._onNext}>⏭</button>
+                 <button @click=${this._onPrevious}><img src="icons/back_player.svg" ></img></button>
+            <button style="margin-top:-7px; font-size: 1.5em; color:#5F5F5F; " @click=${this._onPlayPause}>${this.isPlaying ? '⏸' : '▶'}</button>
+            <button @click=${this._onNext}><img src="icons/forward_player.svg" ></img></button>
         </div>
             </div>
         </div>
