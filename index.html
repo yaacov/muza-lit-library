@@ -59,7 +59,7 @@
 
     <div class="main">
       <music-topbar></music-topbar>
-      <music-player></music-player>
+      <music-player id="player"></music-player>
       <div class="content">
 
         <music-section
@@ -101,7 +101,16 @@
       import "./src/MusicSection.ts";
       import "./src/MusicSidebar.ts";
       import "./src/MusicTopbar.ts";
-      import "./src/MusicPlayer.ts"
+      import "./src/MusicPlayer.ts";
+      const player = document.getElementById('player');
+      document.addEventListener("album-selected", (event)=>{
+        player.title = event.detail.title
+        player.src= event.detail.imageSrc
+        player.album = event.detail.title
+
+      });
+      
+
       // Set the sections after the component is loaded
       document.addEventListener('DOMContentLoaded', () => {
         const sidebar = document.getElementById('sidebar');

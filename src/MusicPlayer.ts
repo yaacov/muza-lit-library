@@ -1,9 +1,17 @@
 import { LitElement, html, css } from "lit";
-import { customElement, state } from "lit/decorators.js";
+import { customElement, property } from "lit/decorators.js";
 
 
 @customElement("music-player")
 export class MusicPlayer extends LitElement{
+  @property({ type: String }) src = "art/imag_3.jpg";
+  @property({ type: String }) title = "";
+  @property({ type: String }) artist = "Unknown Artist";
+  @property({ type: String }) album = "Unknown Album";
+  @property({ type: Number }) year = 2000;
+  @property({ type: Number }) duration =30;
+  @property({ type: Number }) currentTime = 20;
+  @property({ type: Boolean }) isPlaying = false;
     static styles = css`
       :host {
       display: block;
@@ -67,7 +75,6 @@ export class MusicPlayer extends LitElement{
     }
     .progress {
       height: 100%;
-      width: 50%;
       background: #666;
       border-radius: 5px;
     }
@@ -88,27 +95,32 @@ export class MusicPlayer extends LitElement{
   `;
 
   render() {
+    if(this.title){
     return html`
       <div class="player">
-        <img class="album-art" src="art/imag_2.jpg" alt="Album Art">
+        <img class="album-art" src=${this.src} alt="Album Art">
         <div class="track-info">
-          <h4>Nancy (With The Laughing Face)</h4>
-          <p>John Coltrane  1961</p>
-          <h5>Album name • year</h5>
+          <h4>${this.title}</h4>
+          <p>${this.artist} </p>
+          <h5>${this.album} • ${this.year}</h5>
         </div>
         <div class="player-controls">
             <div class="progress-bar">
-                <div class="progress"></div>
+                <div class="progress" 
+                     style="width: ${(this.currentTime / this.duration) * 100}%">
+                </div>
             </div>
             <div class="controls">
                 <button>&#x23EE;</button>
-                <button>&#x23F5;</button>
+                <button>${this.isPlaying ? '⏸' : '▶'}</button>
                 <button>&#x23ED;</button>
             </div>
-            
         </div>
       </div>
     `;
+  }else{
+     return html``
   }
 
+}
 }
