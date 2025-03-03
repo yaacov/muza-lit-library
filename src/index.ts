@@ -4,3 +4,4 @@ export { MusicSidebar } from "./MusicSidebar";
 export { MusicTopbar } from "./MusicTopbar";
 export { VolumeControl } from "./VolumeControl";
 export { MusicPlayer } from "./MusicPlayer";
+export { SongLine } from "./SongLine"
