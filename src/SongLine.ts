@@ -8,7 +8,7 @@ interface SongDetails {
 
 @customElement("song-line")
 export class SongLine extends LitElement {
-    @property({ type: Object, attribute: "song-details" })details: SongDetails = { number: 0, title: "song", time: 200 };
+    @property({ type: Object})details: SongDetails = { number: 1, title: "song", time: 200 };
   
   static styles = css`
     :host {
@@ -90,7 +90,7 @@ export class SongLine extends LitElement {
         <span class="play-sign">&#x23F5;</span>
         <span class="song-title">${this.details.title}</span>
         </div>
-        <span class="song-time">${Math.round(this.details.time/60)}:${this.details.time%60}</span>
+        <span class="song-time">${String(Math.round(this.details.time/60)).padStart(2, '0')}:${String(this.details.time%60).padStart(2, '0')}</span>
       </div>
     `;
   }
