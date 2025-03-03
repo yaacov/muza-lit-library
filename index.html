@@ -60,12 +60,9 @@
     <div class="main">
       <music-topbar></music-topbar>
 
-
+      <music-player id="player"></music-player>
 
       <div class="content">
-        <song-line id="song1"></song-line>
-
-
         <music-section
           title="Featured Albums"
           albums='[
@@ -105,14 +102,18 @@
       import "./src/MusicSection.ts";
       import "./src/MusicSidebar.ts";
       import "./src/MusicTopbar.ts";
-      import "./src/SongLine.ts"
+      import "./src/MusicPlayer.ts";
 
+      const player = document.getElementById('player');
+      document.addEventListener("album-selected", (event)=>{
+        player.title = event.detail.title
+        player.src= event.detail.imageSrc
+        player.album = event.detail.title
+      });
 
       // Set the sections after the component is loaded
       document.addEventListener('DOMContentLoaded', () => {
         const sidebar = document.getElementById('sidebar');
-        document.getElementById('song2');
-
         sidebar.sections = [
           {
             title: 'My Muza',
@@ -132,7 +133,6 @@
           }
         ];
       });
-
     </script>
   </body>
 </html>
