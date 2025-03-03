@@ -20,27 +20,27 @@ export class SongLine extends LitElement {
       font-size: 14px;
     }
     :host:hover {
-     background:#EDEDED;
+      background:#EDEDED;
     }
     :host:hover .song-number {
-    display:none;    
+      display:none;    
     }
     :host(:hover) .play-sign {
-    display:inherit;    
+      display:inherit;    
     }
     .song-row{
       display:flex;
       align-items: center;
-  justify-content: space-between; 
-  flex-direction: row;         /* Default: Left to Right */
-    width:100%
+      justify-content: space-between; 
+      flex-direction: row;         /* Default: Left to Right */
+      width:100%
 
     }
     .play-sign{
-    display:none;
-    font-weight: bold;
-    color: gray;
-    margin-right: 12px;    
+      display:none;
+      font-weight: bold;
+      color: gray;
+      margin-right: 12px;    
     }
     .song-number {
       font-weight: bold;
@@ -57,16 +57,16 @@ export class SongLine extends LitElement {
 
     }
     :host(:hover){
-     background:#EDEDED;
+      background:#EDEDED;
     }
     :host(:hover) .song-number{
-    display:none;    
+      display:none;    
     }
     :host(:hover) .play-sign{
-    display:inline;    
+      display:inline;    
     }
     .song-title{
-    font-size:1.2em
+      font-size:1.2em
     }
   `;
   private songLineClick() {
@@ -85,10 +85,9 @@ export class SongLine extends LitElement {
       
       <div class="song-row" @click=${this.songLineClick} >
         <div class="text">
-
-        <span class="song-number">${String(this.details.number).padStart(2, '0')}</span>
-        <span class="play-sign">&#x23F5;</span>
-        <span class="song-title">${this.details.title}</span>
+          <span class="song-number">${String(this.details.number).padStart(2, '0')}</span>
+          <span class="play-sign">&#x23F5;</span>
+          <span class="song-title">${this.details.title}</span>
         </div>
         <span class="song-time">${String(Math.round(this.details.time/60)).padStart(2, '0')}:${String(this.details.time%60).padStart(2, '0')}</span>
       </div>
