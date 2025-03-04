@@ -1,5 +1,5 @@
-import { LitElement, html, css } from "lit";
-import { customElement, property } from "lit/decorators.js";
+import { LitElement, html, css } from 'lit';
+import { customElement, property } from 'lit/decorators.js';
 
 interface MusicTrack {
   id: number;
@@ -23,48 +23,48 @@ interface MusicTrack {
   song_file: string;
   created_at: string;
 }
-@customElement("music-player")
-export class MusicPlayer extends LitElement{
-  @property({ type: String }) imageSrc = "";
-  @property({ type: String }) title = "";
-  @property({ type: String }) artist = "";
-  @property({ type: String }) album = "";
+@customElement('music-player')
+export class MusicPlayer extends LitElement {
+  @property({ type: String }) imageSrc = '';
+  @property({ type: String }) title = '';
+  @property({ type: String }) artist = '';
+  @property({ type: String }) album = '';
   @property({ type: Number }) year = 0;
-  @property({ type: Number }) duration =0;
+  @property({ type: Number }) duration = 0;
   @property({ type: Number }) currentTime = 0;
   @property({ type: Boolean }) isPlaying = false;
-  @property({type:String}) audioUrl=""
+  @property({ type: String }) audioUrl = '';
   private audioElement?: HTMLAudioElement;
-  private _initializeAudio(volume:number) {
+  private _initializeAudio(volume: number) {
     if (this.audioElement) {
       this.audioElement.pause();
     }
 
     this.audioElement = new Audio(this.audioUrl);
     this.audioElement.volume = volume;
-    this.audioElement.addEventListener("loadeddata", () => {
+    this.audioElement.addEventListener('loadeddata', () => {
       this.isPlaying = true;
       this.audioElement?.play();
     });
-    this.audioElement.addEventListener("loadedmetadata", () => {
+    this.audioElement.addEventListener('loadedmetadata', () => {
       this.duration = this.audioElement?.duration || 0;
       this.currentTime = this.audioElement?.currentTime || 0;
     });
-    this.audioElement.addEventListener("timeupdate", () => {
+    this.audioElement.addEventListener('timeupdate', () => {
       this.currentTime = this.audioElement?.currentTime || 0;
     });
-    this.audioElement.addEventListener("ended", () => {
+    this.audioElement.addEventListener('ended', () => {
       this.isPlaying = false;
-      this._onNext()
+      this._onNext();
     });
-    this.audioElement.addEventListener("waiting", () => {
+    this.audioElement.addEventListener('waiting', () => {
       this.isPlaying = false;
     });
-    this.audioElement.addEventListener("playing", () => {
+    this.audioElement.addEventListener('playing', () => {
       this.isPlaying = true;
     });
   }
-  public updateSong(song: MusicTrack, volume:number){
+  public updateSong(song: MusicTrack, volume: number) {
     this.imageSrc = song.album_cover;
     this.title = song.song_title;
     this.artist = song.artist_main;
@@ -72,36 +72,34 @@ export class MusicPlayer extends LitElement{
     this.year = song.year_released;
     this.audioUrl = song.song_file;
     this._initializeAudio(volume);
-    
   }
-  public updateVolume(volume: number){
+  public updateVolume(volume: number) {
     if (this.audioElement) {
       this.audioElement.volume = volume;
     }
-  
   }
-    static styles = css`
-      :host {
+  static styles = css`
+    :host {
       display: block;
       position: fixed; /* Stays at the bottom */
       bottom: 0;
-      right:30px;
-      left:240px;
+      right: 30px;
+      left: 240px;
       z-index: 1000;
       opacity: 0.9;
-      
-        backdrop-filter: blur(20px);
-        border-radius: 10px;
-        box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.1);
-        margin:5px;
+
+      backdrop-filter: blur(20px);
+      border-radius: 10px;
+      box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.1);
+      margin: 5px;
     }
     .player {
-        display: flex;
-        align-items: center;
-        background:#EDEDEDCC;;
-        border-radius: 10px;
-        box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.1);
-        padding: 12px;
+      display: flex;
+      align-items: center;
+      background: #edededcc;
+      border-radius: 10px;
+      box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.1);
+      padding: 12px;
     }
     .album-art {
       width: 7.3vh;
@@ -114,18 +112,20 @@ export class MusicPlayer extends LitElement{
       flex: 4;
       overflow: hidden;
     }
-    .track-info h4, .track-info p, .track-info h5 {
+    .track-info h4,
+    .track-info p,
+    .track-info h5 {
       margin: 0;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
     }
     .track-info h5 {
-    font-size: 0.8rem;
-    color: #A9A9A9;
+      font-size: 0.8rem;
+      color: #a9a9a9;
     }
-    .track-info p{
-    color: #A9A9A9;
+    .track-info p {
+      color: #a9a9a9;
     }
     .progress-bar {
       width: 100%;
@@ -135,12 +135,12 @@ export class MusicPlayer extends LitElement{
       margin: 5px 0;
       border-radius: 5px;
     }
-    .player-controls{
-        display: flex;
-        flex:10; 
-        align-items: center;
-        flex-direction:column;
-        height:90%;
+    .player-controls {
+      display: flex;
+      flex: 10;
+      align-items: center;
+      flex-direction: column;
+      height: 90%;
     }
     .progress {
       height: 100%;
@@ -153,9 +153,10 @@ export class MusicPlayer extends LitElement{
       align-items: center;
       gap: 10px;
     }
-    .controls button{
-      margin-top:-7px;
-      font-size: 1.5em; color:#5F5F5F;
+    .controls button {
+      margin-top: -7px;
+      font-size: 1.5em;
+      color: #5f5f5f;
     }
     button {
       border: none;
@@ -163,62 +164,66 @@ export class MusicPlayer extends LitElement{
       cursor: pointer;
       font-size: 18px;
     }
-    .durations{
-    display:flex;
-    width:100%;
-    justify-content: space-between;
+    .durations {
+      display: flex;
+      width: 100%;
+      justify-content: space-between;
     }
-    .durations span{
-    font-size:0.8rem;
-    color:#5F5F5F;
+    .durations span {
+      font-size: 0.8rem;
+      color: #5f5f5f;
     }
-    .album-name:{
-    font-size: 0.5em;
+    .album-name: {
+      font-size: 0.5em;
     }
   `;
-  // controllers events 
+  // controllers events
   private _onPrevious() {
-    this.dispatchEvent(new CustomEvent('previous-track', {
+    this.dispatchEvent(
+      new CustomEvent('previous-track', {
         bubbles: true,
-        composed: true
-    }));
-}
-
-private _onPlayPause() {
-  if (!this.audioElement) return;
-    
-  if (this.isPlaying) {
-    this.audioElement.pause();
-  } else {
-    this.audioElement.play();
+        composed: true,
+      })
+    );
   }
-  this.isPlaying = !this.isPlaying;
-}
 
-private _onNext() {
-    this.dispatchEvent(new CustomEvent('next-track', {
+  private _onPlayPause() {
+    if (!this.audioElement) return;
+
+    if (this.isPlaying) {
+      this.audioElement.pause();
+    } else {
+      this.audioElement.play();
+    }
+    this.isPlaying = !this.isPlaying;
+  }
+
+  private _onNext() {
+    this.dispatchEvent(
+      new CustomEvent('next-track', {
         bubbles: true,
-        composed: true
-    }));
-}
-//progress bar events
-private _isDragging = false;
+        composed: true,
+      })
+    );
+  }
+  //progress bar events
+  private _isDragging = false;
 
-private _onStartDrag(e: MouseEvent) {
+  private _onStartDrag(e: MouseEvent) {
     this._isDragging = true;
     this._updateTimeFromClick(e);
-}
+  }
 
-private _onDrag(e: MouseEvent) {
+  private _onDrag(e: MouseEvent) {
     if (!this._isDragging) return;
     this._updateTimeFromClick(e);
-}
+  }
 
-private _onStopDrag() {
+  private _onStopDrag() {
     this._isDragging = false;
-}
+  }
 
-private _updateTimeFromClick(e: MouseEvent) {
+  private _updateTimeFromClick(e: MouseEvent) {
     const progressBar = e.currentTarget as HTMLElement;
     const rect = progressBar.getBoundingClientRect();
     const x = e.clientX - rect.left;
@@ -226,18 +231,20 @@ private _updateTimeFromClick(e: MouseEvent) {
     const percentage = Math.min(Math.max(x / width, 0), 1);
     const newTime = percentage * this.duration;
     if (this.audioElement) {
-    this.audioElement.currentTime = newTime;
+      this.audioElement.currentTime = newTime;
     }
     this.currentTime = newTime;
-    this.dispatchEvent(new CustomEvent('time-update', {
+    this.dispatchEvent(
+      new CustomEvent('time-update', {
         bubbles: true,
         composed: true,
-        detail: { currentTime: newTime }
-    }));
-}
+        detail: { currentTime: newTime },
+      })
+    );
+  }
   render() {
-    if(this.audioElement){
-    return html`
+    if (this.audioElement) {
+      return html`
       <div class="player">
         <img class="album-art" src=${this.imageSrc} alt="Album Art">
         <div class="track-info">
@@ -253,26 +260,37 @@ private _updateTimeFromClick(e: MouseEvent) {
               @mouseleave=${this._onStopDrag}
               >
                 <div class="progress" 
-                     style="width: ${(this.currentTime / this.duration) * 100}%">
+                     style="width: ${
+                       (this.currentTime / this.duration) * 100
+                     }%">
                 </div>
             </div>
             <div class="durations">
-            <span>${Math.floor(this.currentTime / 60)}:${Math.floor(this.currentTime % 60).toString().padStart(2, '0')}</span>
-            <span>${Math.floor((this.duration-this.currentTime) / 60)}:${Math.floor((this.duration-this.currentTime) % 60).toString().padStart(2, '0')}</span>
+            <span>${Math.floor(this.currentTime / 60)}:${Math.floor(
+        this.currentTime % 60
+      )
+        .toString()
+        .padStart(2, '0')}</span>
+            <span>${Math.floor(
+              (this.duration - this.currentTime) / 60
+            )}:${Math.floor((this.duration - this.currentTime) % 60)
+        .toString()
+        .padStart(2, '0')}</span>
             
             </div>
             <div class="controls">
               <button @click=${this._onPrevious}>⏮</button>
-              <button @click=${this._onPlayPause}>${this.isPlaying ? '⏸' : '▶'}</button>
+              <button @click=${this._onPlayPause}>${
+        this.isPlaying ? '⏸' : '▶'
+      }</button>
               <button @click=${this._onNext}>⏭</button>
             </div>
           </div>
         </div>
       </div>
     `;
-  }else{
-     return html``
+    } else {
+      return html``;
+    }
   }
-
-}
 }
