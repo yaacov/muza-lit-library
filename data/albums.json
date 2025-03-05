@@ -1,0 +1,16 @@
+{
+    "featured": [
+      {"id": "1", "imageSrc": "art/imag_2.jpg", "title": "Orange cat", "subTitle": "1944", "artist": "Meow Productions", "songs": [1, 2, 3]},
+      {"id": "2", "imageSrc": "art/imag_3.jpg", "title": "Paper cat", "subTitle": "2002", "artist": "Origami Felines", "songs": [4, 5, 6]}
+    ],
+    "newReleases": [
+      {"id": "3", "imageSrc": "art/imag_1.jpg", "title": "Two cats", "subTitle": "2023", "artist": "Double Trouble", "songs": [7, 8, 9]},
+      {"id": "4", "imageSrc": "art/imag_2.jpg", "title": "Orange cat", "subTitle": "1944", "artist": "Meow Productions", "songs": [1, 2, 3]},
+      {"id": "5", "imageSrc": "art/imag_3.jpg", "title": "Paper cat", "subTitle": "2002", "artist": "Origami Felines", "songs": [4, 5, 6]}
+    ],
+    "recommended": [
+      {"id": "6", "imageSrc": "art/imag_3.jpg", "title": "Paper cat", "subTitle": "2002", "artist": "Origami Felines", "songs": [4, 5, 6]},
+      {"id": "7", "imageSrc": "art/imag_1.jpg", "title": "Two cats", "subTitle": "2023", "artist": "Double Trouble", "songs": [7, 8, 9]},
+      {"id": "8", "imageSrc": "art/imag_2.jpg", "title": "Orange cat", "subTitle": "1944", "artist": "Meow Productions", "songs": [1, 2, 3]}
+    ]
+  }

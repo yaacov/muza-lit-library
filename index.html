@@ -60,43 +60,8 @@
     <div class="main">
       <music-topbar></music-topbar>
 
-
-
-      <div class="content">
+      <div class="content" id="content">
         <song-line id="song1"></song-line>
-
-
-        <music-section
-          title="Featured Albums"
-          albums='[
-            {"imageSrc": "art/imag_2.jpg", "title": "Orange cat", "subTitle": "1944"},
-            {"imageSrc": "art/imag_3.jpg", "title": "Paper cat", "subTitle": "2002"}
-          ]'
-        ></music-section>
-        <music-section
-          title="New Relases"
-          albums='[
-            {"imageSrc": "art/imag_3.jpg", "title": "Paper cat", "subTitle": "2002"},
-            {"imageSrc": "art/imag_1.jpg", "title": "Two cats", "subTitle": "2023"},
-            {"imageSrc": "art/imag_2.jpg", "title": "Orange cat", "subTitle": "1944"}
-          ]'
-        ></music-section>
-        <music-section
-          title="New Relases"
-          albums='[
-            {"imageSrc": "art/imag_3.jpg", "title": "Paper cat", "subTitle": "2002"},
-            {"imageSrc": "art/imag_1.jpg", "title": "Two cats", "subTitle": "2023"},
-            {"imageSrc": "art/imag_2.jpg", "title": "Orange cat", "subTitle": "1944"}
-          ]'
-        ></music-section>
-        <music-section
-          title="New Relases"
-          albums='[
-            {"imageSrc": "art/imag_3.jpg", "title": "Paper cat", "subTitle": "2002"},
-            {"imageSrc": "art/imag_1.jpg", "title": "Two cats", "subTitle": "2023"},
-            {"imageSrc": "art/imag_2.jpg", "title": "Orange cat", "subTitle": "1944"}
-          ]'
-        ></music-section>
       </div>
     </div>
 
@@ -105,14 +70,13 @@
       import "./src/MusicSection.ts";
       import "./src/MusicSidebar.ts";
       import "./src/MusicTopbar.ts";
-      import "./src/SongLine.ts"
-
+      import "./src/SongLine.ts";
 
       // Set the sections after the component is loaded
-      document.addEventListener('DOMContentLoaded', () => {
+      document.addEventListener('DOMContentLoaded', async () => {
         const sidebar = document.getElementById('sidebar');
-        document.getElementById('song2');
 
+        // Configure sidebar
         sidebar.sections = [
           {
             title: 'My Muza',
@@ -131,8 +95,47 @@
             ]
           }
         ];
-      });
 
+        // Fetch album and song data
+        const albumsResponse = await fetch('data/albums.json');
+        const albumsData = await albumsResponse.json();
+        
+        const songsResponse = await fetch('data/songs.json');
+        const songsData = await songsResponse.json();
+
+        // Configure song-line with first song data
+        const song1 = document.getElementById('song1');
+        if (song1 && songsData.songs.length > 0) {
+          song1.details = songsData.songs[0];
+        }
+
+        // Create album sections from JSON data
+        const contentElement = document.getElementById('content');
+
+        // Create Featured Albums section
+        if (albumsData.featured && albumsData.featured.length > 0) {
+          const featuredSection = document.createElement('music-section');
+          featuredSection.title = "Featured Albums";
+          featuredSection.albums = albumsData.featured;
+          contentElement.appendChild(featuredSection);
+        }
+
+        // Create New Releases section
+        if (albumsData.newReleases && albumsData.newReleases.length > 0) {
+          const newReleasesSection = document.createElement('music-section');
+          newReleasesSection.title = "New Releases";
+          newReleasesSection.albums = albumsData.newReleases;
+          contentElement.appendChild(newReleasesSection);
+        }
+
+        // Create Recommended section
+        if (albumsData.recommended && albumsData.recommended.length > 0) {
+          const recommendedSection = document.createElement('music-section');
+          recommendedSection.title = "Recommended";
+          recommendedSection.albums = albumsData.recommended;
+          contentElement.appendChild(recommendedSection);
+        }
+      });
     </script>
   </body>
 </html>
