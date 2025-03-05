@@ -1,15 +1,11 @@
 import { LitElement, html, css } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
-interface SongDetails {
-  number: number;
-  title: string;
-  time: number;
-}
+import type { SongDetails } from './models';
 
 @customElement('song-line')
 export class SongLine extends LitElement {
   @property({ type: Object }) details: SongDetails = {
-    number: 1,
+    index: 1,
     title: 'song',
     time: 200,
   };
@@ -71,32 +67,22 @@ export class SongLine extends LitElement {
       font-size: 1.2em;
     }
   `;
-  private songLineClick() {
-    const event = new CustomEvent('song-selected', {
-      detail: {
-        title: this.title,
-      }, //add full song details
-      bubbles: true,
-      composed: true,
-    });
-    this.dispatchEvent(event);
-  }
 
   render() {
     return html`
-      <div class="song-row" @click=${this.songLineClick}>
+      <div class="song-row">
         <div class="text">
           <span class="song-number"
-            >${String(this.details.number).padStart(2, '0')}</span
+            >${String(this.details.index).padStart(2, '0')}</span
           >
           <span class="play-sign">&#x23F5;</span>
           <span class="song-title">${this.details.title}</span>
         </div>
         <span class="song-time"
-          >${String(Math.round(this.details.time / 60)).padStart(
-            2,
-            '0'
-          )}:${String(this.details.time % 60).padStart(2, '0')}</span
+          >${String(Math.round((this.details.time || 0) / 60)).padStart(
+      2,
+      '0'
+    )}:${String((this.details.time || 0) % 60).padStart(2, '0')}</span
         >
       </div>
     `;
