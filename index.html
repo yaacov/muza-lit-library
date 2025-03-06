@@ -98,58 +98,57 @@
       // Create Songs section with dynamically generated song-lines
       if (songsData.songs && songsData.songs.length > 0) {
         songsData.songs.forEach(song => {
-        const songLine = document.createElement('song-line');
-        songLine.details = song;
-        songLine.addEventListener('click', (event) => {
-          // Create player data object from event details
-          const songLine = event.target.details;
-          
-          const data = {
-            src: songLine.audioUrl,
-            imageSrc: songLine.imageSrc,
-            title: songLine.title,
-            artist: songLine.artist,
-            album: songLine.album,
-            year: songLine.year,
-            isPlaying: true
-          };
+          const songLine = document.createElement('song-line');
+          songLine.details = song;
+          songLine.addEventListener('click', (event) => {
+            // Create player data object from event details
+            const songLine = event.target.details;
+            
+            const data = {
+              src: songLine.audioUrl,
+              imageSrc: songLine.imageSrc,
+              title: songLine.title,
+              artist: songLine.artist,
+              album: songLine.album,
+              year: songLine.year,
+              isPlaying: true
+            };
 
-          // Update the player details (single update)
-          player.details = data;
+            // Update the player details (single update)
+            player.details = data;
+          });
+            content.appendChild(songLine);
         });
+      }
 
-        content.appendChild(songLine);
-      });
-    }
+      // Fetch album and song data
+      const albumsResponse = await fetch('data/albums.json');
+      const albumsData = await albumsResponse.json();
 
-    // Fetch album and song data
-    const albumsResponse = await fetch('data/albums.json');
-    const albumsData = await albumsResponse.json();
+      // Create Featured Albums section
+      if (albumsData.featured && albumsData.featured.length > 0) {
+        const featuredSection = document.createElement('music-section');
+        featuredSection.title = "Featured Albums";
+        featuredSection.albums = albumsData.featured;
+        content.appendChild(featuredSection);
+      }
 
-    // Create Featured Albums section
-    if (albumsData.featured && albumsData.featured.length > 0) {
-      const featuredSection = document.createElement('music-section');
-      featuredSection.title = "Featured Albums";
-      featuredSection.albums = albumsData.featured;
-      content.appendChild(featuredSection);
-    }
+      // Create New Releases section
+      if (albumsData.newReleases && albumsData.newReleases.length > 0) {
+        const newReleasesSection = document.createElement('music-section');
+        newReleasesSection.title = "New Releases";
+        newReleasesSection.albums = albumsData.newReleases;
+        content.appendChild(newReleasesSection);
+      }
 
-    // Create New Releases section
-    if (albumsData.newReleases && albumsData.newReleases.length > 0) {
-      const newReleasesSection = document.createElement('music-section');
-      newReleasesSection.title = "New Releases";
-      newReleasesSection.albums = albumsData.newReleases;
-      content.appendChild(newReleasesSection);
-    }
-
-    // Create Recommended section
-    if (albumsData.recommended && albumsData.recommended.length > 0) {
-      const recommendedSection = document.createElement('music-section');
-      recommendedSection.title = "Recommended";
-      recommendedSection.albums = albumsData.recommended;
-      content.appendChild(recommendedSection);
-    }
-      };
+      // Create Recommended section
+      if (albumsData.recommended && albumsData.recommended.length > 0) {
+        const recommendedSection = document.createElement('music-section');
+        recommendedSection.title = "Recommended";
+        recommendedSection.albums = albumsData.recommended;
+        content.appendChild(recommendedSection);
+      }
+    };
 
     // Execute the data fetching immediately
     fetchData();
