@@ -65,16 +65,6 @@
       <!-- Content will be generated dynamically -->
     </div>
 
-  </div>
-
-  <!-- <div class="content">
-      <song-line id="song1"></song-line>
-      <song-details details='{
-        "imageSrc": "art/imag_2.jpg",
-        "title": "song",
-        "artist": "song artist"
-      }' ></song-details> -->
-
   <music-player id="player"></music-player>
 
   <script type="module">
@@ -89,23 +79,6 @@
     const sidebar = document.getElementById('sidebar');
     const content = document.getElementById('content');
     const player = document.getElementById('player');
-
-    // Add handler for song-selected event
-    // document.addEventListener("song-selected", (event) => {
-    //   // Create player data object from event details
-    //   const data = {
-    //     src: event.detail.audioUrl,
-    //     imageSrc: event.detail.imageSrc,
-    //     title: event.detail.title,
-    //     artist: event.detail.artist,
-    //     album: event.detail.album,
-    //     year: event.detail.year,
-    //     isPlaying: false
-    //   };
-
-    //   // Update the player details (single update)
-    //   player.details = data;
-    // });
 
     // Volume change handler
     document.addEventListener("volume-change", (event) => {
@@ -125,25 +98,26 @@
       // Create Songs section with dynamically generated song-lines
       if (songsData.songs && songsData.songs.length > 0) {
         songsData.songs.forEach(song => {
-          const songLine = document.createElement('song-line');
-          songLine.details = song;
-          songLine.addEventListener('click', (event) => {
-            // Create player data object from event details
-            const songLine = event.target.details;
-            
-            const data = {
-              src: songLine.audioUrl,
-              imageSrc: songLine.imageSrc,
-              title: songLine.title,
-              artist: songLine.artist,
-              album: songLine.album,
-              year: songLine.year,
-              isPlaying: true
-            };
+        const songLine = document.createElement('song-line');
+        songLine.details = song;
+        songLine.addEventListener('click', (event) => {
+          // Create player data object from event details
+          const songLine = event.target.details;
+          
+          const data = {
+            src: songLine.audioUrl,
+            imageSrc: songLine.imageSrc,
+            title: songLine.title,
+            artist: songLine.artist,
+            album: songLine.album,
+            year: songLine.year,
+            isPlaying: true
+          };
 
-            // Update the player details (single update)
-            player.details = data;
-          });
+          // Update the player details (single update)
+          player.details = data;
+        });
+
         content.appendChild(songLine);
       });
     }
