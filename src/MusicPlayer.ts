@@ -1,82 +1,90 @@
 import { LitElement, html, css } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 
-interface MusicTrack {
-  id: number;
-  uuid: string;
-  original_uuid: string;
-  album_cover: string;
-  album_title: string;
-  label: string;
-  label_logo: string;
-  band_name: string;
-  artist_photo: string;
-  artist_main: string;
-  instrument: string;
-  other_artist_playing: string;
-  other_instrument: string;
-  year_recorded: number;
-  year_released: number;
-  song_order: number;
-  song_title: string;
-  composer: string;
-  song_file: string;
-  created_at: string;
+interface PlayerDetails {
+  imageSrc: string;
+  title: string;
+  artist: string;
+  album: string;
+  year: number;
+  isPlaying: boolean;
+  duration?: number;
+  currentTime?: number;
 }
 @customElement('music-player')
 export class MusicPlayer extends LitElement {
-  @property({ type: String }) imageSrc = '';
-  @property({ type: String }) title = '';
-  @property({ type: String }) artist = '';
-  @property({ type: String }) album = '';
-  @property({ type: Number }) year = 0;
-  @property({ type: Number }) duration = 0;
-  @property({ type: Number }) currentTime = 0;
-  @property({ type: Boolean }) isPlaying = false;
-  @property({ type: String }) audioUrl = '';
-  private audioElement?: HTMLAudioElement;
-  private _initializeAudio(volume: number) {
-    if (this.audioElement) {
-      this.audioElement.pause();
-    }
+  @property({type:HTMLElement}) audioElement : HTMLAudioElement | null = null;
 
-    this.audioElement = new Audio(this.audioUrl);
-    this.audioElement.volume = volume;
-    this.audioElement.addEventListener('loadeddata', () => {
-      this.isPlaying = true;
-      this.audioElement?.play();
-    });
-    this.audioElement.addEventListener('loadedmetadata', () => {
-      this.duration = this.audioElement?.duration || 0;
-      this.currentTime = this.audioElement?.currentTime || 0;
-    });
-    this.audioElement.addEventListener('timeupdate', () => {
-      this.currentTime = this.audioElement?.currentTime || 0;
-    });
-    this.audioElement.addEventListener('ended', () => {
-      this.isPlaying = false;
-      this._onNext();
-    });
-    this.audioElement.addEventListener('waiting', () => {
-      this.isPlaying = false;
-    });
-    this.audioElement.addEventListener('playing', () => {
-      this.isPlaying = true;
-    });
+  @property({ type: Object }) details:PlayerDetails = {
+    imageSrc: '',
+    title: '',
+    artist: '',
+    album: '',
+    year: 0,
+    isPlaying:false,
   }
-  public updateSong(song: MusicTrack, volume: number) {
-    this.imageSrc = song.album_cover;
-    this.title = song.song_title;
-    this.artist = song.artist_main;
-    this.album = song.album_title;
-    this.year = song.year_released;
-    this.audioUrl = song.song_file;
-    this._initializeAudio(volume);
-  }
-  public updateVolume(volume: number) {
+  @property({ type: Function }) onPrevious?: () => void =()=>{};
+  @property({ type: Function }) onPlayPause?: () => void=()=>{};
+  @property({ type: Function }) onNext?: () => void=()=>{};
+  @property({ type: Function }) onSeek?: (time: number) => void = (time:number)=>{};
+
+  private _initializeAudio() {
     if (this.audioElement) {
-      this.audioElement.volume = volume;
+    }   
+    this.audioElement?.addEventListener('loadeddata', () => {
+      this.details.isPlaying = true;
+      this.requestUpdate('details.isPlaying');
+
+    });
+    this.audioElement?.addEventListener('ended', () => {
+      this.details.isPlaying = false;
+      this.requestUpdate('details.isPlaying');
+
+    });
+    this.audioElement?.addEventListener('waiting', () => {
+      this.details.isPlaying = false;
+      this.requestUpdate('details.isPlaying');
+
+    });
+    this.audioElement?.addEventListener('playing', () => {
+      this.details.isPlaying = true;
+      this.requestUpdate('details.isPlaying');
+
+    });
+    this.audioElement?.addEventListener('pause', () => {
+      this.details.isPlaying = false;
+      this.requestUpdate('details.isPlaying');
+
+    });
+    this.audioElement?.addEventListener('durationchange', () => {
+      this.duration = this.audioElement?.duration || 0;
+      this.requestUpdate('duration');
+
+    });
+    this.audioElement?.addEventListener('timeupdate', () => {
+      this.currentTime = this.audioElement?.currentTime || 0;
+      this.requestUpdate('currentTime');
+
+    });
+  }
+  private duration = this.details.duration?this.details.duration:120;
+  private currentTime = this.details.currentTime?this.details.currentTime:0;
+ 
+  protected updated(changedProperties: Map<string, any>) {
+    if (changedProperties.has('audioElement')) {
+      this._initializeAudio();
+      this.requestUpdate();
+
     }
+  }
+  
+  constructor(){
+    super();
+    if(this.audioElement){
+          this._initializeAudio();
+
+    }
+  
   }
   static styles = css`
     :host {
@@ -179,6 +187,7 @@ export class MusicPlayer extends LitElement {
   `;
   // controllers events
   private _onPrevious() {
+    this.onPrevious?.();
     this.dispatchEvent(
       new CustomEvent('previous-track', {
         bubbles: true,
@@ -188,18 +197,30 @@ export class MusicPlayer extends LitElement {
   }
 
   private _onPlayPause() {
-    if (!this.audioElement) return;
-
-    if (this.isPlaying) {
-      this.audioElement.pause();
+    this.onPlayPause?.();
+    if (this.details.isPlaying) {
+      this.dispatchEvent(
+        new CustomEvent('pause', {
+          bubbles: true,
+          composed: true,
+        })
+      );
+      this.audioElement?.pause();
     } else {
-      this.audioElement.play();
+      this.dispatchEvent(
+        new CustomEvent('play', {
+          bubbles: true,
+          composed: true,
+        })
+      );
+      this.audioElement?.play();
     }
-    this.isPlaying = !this.isPlaying;
   }
 
   private _onNext() {
+    this.onNext?.()
     this.dispatchEvent(
+
       new CustomEvent('next-track', {
         bubbles: true,
         composed: true,
@@ -230,10 +251,9 @@ export class MusicPlayer extends LitElement {
     const width = rect.width;
     const percentage = Math.min(Math.max(x / width, 0), 1);
     const newTime = percentage * this.duration;
-    if (this.audioElement) {
-      this.audioElement.currentTime = newTime;
-    }
-    this.currentTime = newTime;
+    this.onSeek?.(newTime);
+
+    this.audioElement!.currentTime = newTime;
     this.dispatchEvent(
       new CustomEvent('time-update', {
         bubbles: true,
@@ -246,11 +266,11 @@ export class MusicPlayer extends LitElement {
     if (this.audioElement) {
       return html`
       <div class="player">
-        <img class="album-art" src=${this.imageSrc} alt="Album Art">
+        <img class="album-art" src=${this.details.imageSrc} alt="Album Art">
         <div class="track-info">
-          <h4>${this.title}</h4>
-          <p>${this.artist} </p>
-          <h5>${this.album} • ${this.year}</h5>
+          <h4>${this.details.title}</h4>
+          <p>${this.details.artist} </p>
+          <h5>${this.details.album} • ${this.details.year}</h5>
         </div>
         <div class="player-controls">
             <div class="progress-bar"
@@ -267,7 +287,7 @@ export class MusicPlayer extends LitElement {
             </div>
             <div class="durations">
             <span>${Math.floor(this.currentTime / 60)}:${Math.floor(
-        this.currentTime % 60
+              this.currentTime % 60
       )
         .toString()
         .padStart(2, '0')}</span>
@@ -281,7 +301,7 @@ export class MusicPlayer extends LitElement {
             <div class="controls">
               <button @click=${this._onPrevious}>⏮</button>
               <button @click=${this._onPlayPause}>${
-        this.isPlaying ? '⏸' : '▶'
+        this.details.isPlaying ? '⏸' : '▶'
       }</button>
               <button @click=${this._onNext}>⏭</button>
             </div>

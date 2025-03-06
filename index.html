@@ -134,39 +134,30 @@
         ];
       });
        //player demo with Track object that changes by album clicking
-       var anotherTrack = {
-        id: 5678,
-        uuid: "9d8c7b6a-5e4f-3d2c-1b0a-9f8e7d6c5b4a",
-        original_uuid: "8e7d6c5b-4a3f-2e1d-0c9b-8a7f6e5d4c3b",
-        album_cover: "beethoven_symphony_5.jpg",
-        album_title: "Symphony No. 5",
-        label: "Deutsche Grammophon",
-        label_logo: "deutsche_grammophon_logo.png",
-        band_name: "Berlin Philharmonic",
-        artist_photo: "herbert_von_karajan.jpg",
-        artist_main: "Herbert von Karajan",
-        instrument: "Conductor",
-        other_artist_playing: "Michel Schwalbé",
-        other_instrument: "Concert Master",
-        year_recorded: 1963,
-        year_released: 1963,
-        song_order: 1,
-        song_title: "Symphony No. 5 in C minor, Op. 67: I. Allegro con brio",
-        composer: "Ludwig van Beethoven",
-        song_file: "https://file-examples.com/storage/fe7502810367c61059aaa19/2017/11/file_example_MP3_700KB.mp3",
-        created_at: "2023-12-15T15:45:00Z"
-      };
-      const player = document.getElementById('player');
+      
+      var player = document.getElementById('player');
       document.addEventListener("album-selected", (event)=>{
-        anotherTrack.song_title = event.detail.title
-        anotherTrack.album_cover= event.detail.imageSrc
-        anotherTrack.album_title = event.detail.title
-        player.updateSong(anotherTrack, 1)
+        const audio = new Audio("https://github.com/muza-music/muza-audio-stream/raw/refs/heads/main/audio_files/09_goin_home.wav")
+
+        var data = {
+          imageSrc: event.detail.imageSrc,
+          title: event.detail.title,
+          artist: event.detail.title,
+          album: event.detail.title,
+          year: 1801,
+          isPlaying: false
+        }
+        audio.addEventListener("canplay", ()=>audio.play())
+
+        player.details = data
+        player.audioElement=audio
       });
       //volume
       document.addEventListener("volume-change", (event)=>{
         player.updateVolume(event.detail.value/100)
       })
+    
+
     </script>
   </body>
 </html>
