@@ -16,87 +16,122 @@ export class SongLine extends LitElement {
 
   static styles = css`
     :host {
+      --primary-text-color: var(--muza-primary-text-color, #000000);
+      --secondary-text-color: var(--muza-secondary-text-color, #5f5f5f);
+      --tertiary-text-color: var(--muza-tertiary-text-color, #888888);
+      --border-color: var(--muza-border-color, #a9a9a9);
+      --hover-background: var(--muza-hover-background, #ededed);
+      --song-title-font-size: var(--muza-songline-title-font-size, 16px);
+      --song-number-font-size: var(--muza-songline-number-font-size, 14px);
+      --song-duration-font-size: var(--muza-songline-duration-font-size, 14px);
+      --song-line-padding: var(--muza-songline-padding, 12px 8px);
+      --song-line-height: var(--muza-songline-height, 28px);
+
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 11px 7px;
-      border-top: 1px solid #a9a9a9;
-      font-size: 14px;
+      padding: var(--song-line-padding);
+      border-top: 1px solid var(--border-color);
+      height: var(--song-line-height);
     }
-    :host:hover {
-      background: #ededed;
+
+    :host(:hover) {
+      background: var(--hover-background);
     }
-    :host:hover .song-number {
+
+    :host(:hover) .track-number {
       display: none;
     }
-    :host(:hover) .play-sign {
-      display: inherit;
+
+    :host(:hover) .play-icon {
+      display: inline-block;
     }
-    .song-row {
+
+    .song-container {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      flex-direction: row; /* Default: Left to Right */
+      flex-direction: row;
       width: 100%;
     }
-    .play-sign {
-      display: none;
-      font-weight: bold;
-      color: gray;
-      margin-right: 12px;
+
+    .track-info {
+      display: flex;
+      align-items: center;
+      min-width: 20px;
     }
-    .song-number {
-      font-weight: bold;
-      color: gray;
+
+    .track-number {
+      color: var(--tertiary-text-color);
       margin-right: 8px;
+      min-width: 20px;
+      display: inline-block;
+      font-size: var(--song-title-font-size);
     }
 
-    .song-title {
-      font-weight: bold;
-    }
-
-    .song-time {
-      color: gray;
-    }
-    :host(:hover) {
-      background: #ededed;
-    }
-    :host(:hover) .song-number {
+    .play-icon {
       display: none;
+      color: var(--tertiary-text-color);
+      margin-right: 8px;
+      min-width: 20px;
+      text-align: center;
     }
-    :host(:hover) .play-sign {
-      display: inline;
+
+    .track-title {
+      color: var(--primary-text-color);
+      font-size: var(--song-title-font-size);
     }
-    .song-title {
-      font-size: 1.2em;
+
+    .track-duration {
+      color: var(--tertiary-text-color);
+      font-weight: bold;
+      font-size: var(--song-duration-font-size);
     }
   `;
+
   private songLineClick() {
     const event = new CustomEvent('song-selected', {
       detail: {
-        title: this.title,
-      }, //add full song details
+        title: this.details.title,
+        number: this.details.number,
+        time: this.details.time,
+      },
       bubbles: true,
       composed: true,
     });
     this.dispatchEvent(event);
   }
 
+  private formatSongNumber(number: number): string {
+    return String(number).padStart(2, '0');
+  }
+
+  private formatDuration(seconds: number): string {
+    const minutes = Math.round(seconds / 60);
+    const remainingSeconds = seconds % 60;
+    return `${String(minutes).padStart(2, '0')}:${String(
+      remainingSeconds
+    ).padStart(2, '0')}`;
+  }
+
   render() {
     return html`
-      <div class="song-row" @click=${this.songLineClick}>
-        <div class="text">
-          <span class="song-number"
-            >${String(this.details.number).padStart(2, '0')}</span
+      <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+      />
+      <div class="song-container" @click=${this.songLineClick}>
+        <div class="track-info">
+          <span class="track-number"
+            >${this.formatSongNumber(this.details.number)}</span
           >
-          <span class="play-sign">&#x23F5;</span>
-          <span class="song-title">${this.details.title}</span>
+          <span class="play-icon">
+            <i class="fa-solid fa-play"></i>
+          </span>
+          <span class="track-title">${this.details.title}</span>
         </div>
-        <span class="song-time"
-          >${String(Math.round(this.details.time / 60)).padStart(
-            2,
-            '0'
-          )}:${String(this.details.time % 60).padStart(2, '0')}</span
+        <span class="track-duration"
+          >${this.formatDuration(this.details.time)}</span
         >
       </div>
     `;
