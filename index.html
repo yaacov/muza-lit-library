@@ -71,11 +71,37 @@
       import "./src/MusicSection.ts";
       import "./src/MusicSidebar.ts";
       import "./src/MusicTopbar.ts";
-      import "./src/SongLine.ts";
+      import "./src/SongLine.ts"
+      import "./src/MusicPlayer.ts";
 
       // Set the sections after the component is loaded
       document.addEventListener('DOMContentLoaded', async () => {
         const sidebar = document.getElementById('sidebar');
+
+       //player demo with Track object that changes by album clicking
+      
+      var player = document.getElementById('player');
+      document.addEventListener("album-selected", (event)=>{
+        const audio = new Audio("https://github.com/muza-music/muza-audio-stream/raw/refs/heads/main/audio_files/09_goin_home.wav")
+
+        var data = {
+          imageSrc: event.detail.imageSrc,
+          title: event.detail.title,
+          artist: event.detail.title,
+          album: event.detail.title,
+          year: 1801,
+          isPlaying: false
+        }
+        audio.addEventListener("canplay", ()=>audio.play())
+
+        player.details = data
+        player.audioElement=audio
+      });
+      //volume
+      document.addEventListener("volume-change", (event)=>{
+        player.updateVolume(event.detail.value/100)
+      })
+    
 
         // Fetch sidebar data from JSON file
         const sidebarResponse = await fetch('data/sidebar.json');
