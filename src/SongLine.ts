@@ -1,20 +1,11 @@
 import { LitElement, html, css } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
-interface SongDetails {
-  number: number;
-  title: string;
-  time: number;
-  audioUrl: string;
-  imageSrc: string;
-  artist: string;
-  album: string;
-  year: number;
-}
+import type { SongDetails } from './models';
 
 @customElement('song-line')
 export class SongLine extends LitElement {
   @property({ type: Object }) details: SongDetails = {
-    number: 1,
+    index: 1,
     title: 'song',
     time: 200,
     audioUrl: '',
@@ -99,24 +90,6 @@ export class SongLine extends LitElement {
     }
   `;
 
-  private songLineClick() {
-    const event = new CustomEvent('song-selected', {
-      detail: {
-        title: this.details.title,
-        number: this.details.number,
-        time: this.details.time,
-        audioUrl: this.details.audioUrl,
-        imageSrc: this.details.imageSrc,
-        artist: this.details.artist,
-        album: this.details.album,
-        year: this.details.year,
-      },
-      bubbles: true,
-      composed: true,
-    });
-    this.dispatchEvent(event);
-  }
-
   private formatSongNumber(number: number): string {
     return String(number).padStart(2, '0');
   }
@@ -135,10 +108,10 @@ export class SongLine extends LitElement {
         rel="stylesheet"
         href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
       />
-      <div class="song-container" @click=${this.songLineClick}>
+      <div class="song-container">
         <div class="track-info">
           <span class="track-number"
-            >${this.formatSongNumber(this.details.number)}</span
+            >${this.formatSongNumber(this.details.index || 1)}</span
           >
           <span class="play-icon">
             <i class="fa-solid fa-play"></i>
@@ -146,7 +119,7 @@ export class SongLine extends LitElement {
           <span class="track-title">${this.details.title}</span>
         </div>
         <span class="track-duration"
-          >${this.formatDuration(this.details.time)}</span
+          >${this.details.time && this.formatDuration(this.details.time)}</span
         >
       </div>
     `;
