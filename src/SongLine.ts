@@ -34,6 +34,7 @@ export class SongLine extends LitElement {
       padding: var(--song-line-padding);
       border-top: 1px solid var(--border-color);
       height: var(--song-line-height);
+      cursor: default;
     }
 
     :host(:hover) {
