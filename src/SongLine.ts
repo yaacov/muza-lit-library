@@ -4,6 +4,11 @@ interface SongDetails {
   number: number;
   title: string;
   time: number;
+  audioUrl: string;
+  imageSrc: string;
+  artist: string;
+  album: string;
+  year: number;
 }
 
 @customElement('song-line')
@@ -12,6 +17,11 @@ export class SongLine extends LitElement {
     number: 1,
     title: 'song',
     time: 200,
+    audioUrl: '',
+    imageSrc: '',
+    artist: '',
+    album: '',
+    year: 0,
   };
 
   static styles = css`
@@ -95,6 +105,11 @@ export class SongLine extends LitElement {
         title: this.details.title,
         number: this.details.number,
         time: this.details.time,
+        audioUrl: this.details.audioUrl,
+        imageSrc: this.details.imageSrc,
+        artist: this.details.artist,
+        album: this.details.album,
+        year: this.details.year,
       },
       bubbles: true,
       composed: true,
