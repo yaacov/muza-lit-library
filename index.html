@@ -66,6 +66,8 @@
       </div>
     </div>
 
+    <music-player id="player"></music-player>
+
     <script type="module">
       import "./src/MusicAlbum.ts";
       import "./src/MusicSection.ts";
@@ -74,65 +76,61 @@
       import "./src/SongLine.ts"
       import "./src/MusicPlayer.ts";
 
-      // Set the sections after the component is loaded
-      document.addEventListener('DOMContentLoaded', async () => {
-        const sidebar = document.getElementById('sidebar');
+      const sidebar = document.getElementById('sidebar');
+      const content = document.getElementById('content');
+      const player = document.getElementById('player');
 
-       //player demo with Track object that changes by album clicking
-      
-      var player = document.getElementById('player');
-      document.addEventListener("album-selected", (event)=>{
-        const audio = new Audio("https://github.com/muza-music/muza-audio-stream/raw/refs/heads/main/audio_files/09_goin_home.wav")
-
-        var data = {
+      // Add handler for song-selected event
+      document.addEventListener("song-selected", (event) => {
+        // Create player data object from event details
+        const data = {
+          src: event.detail.audioUrl,
           imageSrc: event.detail.imageSrc,
           title: event.detail.title,
-          artist: event.detail.title,
-          album: event.detail.title,
-          year: 1801,
+          artist: event.detail.artist,
+          album: event.detail.album,
+          year: event.detail.year,
           isPlaying: false
-        }
-        audio.addEventListener("canplay", ()=>audio.play())
-
-        player.details = data
-        player.audioElement=audio
+        };
+        
+        // Update the player details (single update)
+        player.details = data;
       });
-      //volume
-      document.addEventListener("volume-change", (event)=>{
-        player.updateVolume(event.detail.value/100)
-      })
-    
+      
+      // Volume change handler
+      document.addEventListener("volume-change", (event) => {
+        player.updateVolume(event.detail.value/100);
+      });
 
+      // Fetch sidebar data from JSON file
+      const fetchData = async () => {
         // Fetch sidebar data from JSON file
         const sidebarResponse = await fetch('data/sidebar.json');
         const sidebarData = await sidebarResponse.json();
         sidebar.sections = sidebarData.sections;
 
-        // Fetch album and song data
-        const albumsResponse = await fetch('data/albums.json');
-        const albumsData = await albumsResponse.json();
-        
         const songsResponse = await fetch('data/songs.json');
         const songsData = await songsResponse.json();
-
-        // Create content element
-        const contentElement = document.getElementById('content');
 
         // Create Songs section with dynamically generated song-lines
         if (songsData.songs && songsData.songs.length > 0) {
           songsData.songs.forEach(song => {
             const songLine = document.createElement('song-line');
             songLine.details = song;
-            contentElement.appendChild(songLine);
+            content.appendChild(songLine);
           });
         }
 
+        // Fetch album and song data
+        const albumsResponse = await fetch('data/albums.json');
+        const albumsData = await albumsResponse.json();
+        
         // Create Featured Albums section
         if (albumsData.featured && albumsData.featured.length > 0) {
           const featuredSection = document.createElement('music-section');
           featuredSection.title = "Featured Albums";
           featuredSection.albums = albumsData.featured;
-          contentElement.appendChild(featuredSection);
+          content.appendChild(featuredSection);
         }
 
         // Create New Releases section
@@ -140,7 +138,7 @@
           const newReleasesSection = document.createElement('music-section');
           newReleasesSection.title = "New Releases";
           newReleasesSection.albums = albumsData.newReleases;
-          contentElement.appendChild(newReleasesSection);
+          content.appendChild(newReleasesSection);
         }
 
         // Create Recommended section
@@ -148,9 +146,12 @@
           const recommendedSection = document.createElement('music-section');
           recommendedSection.title = "Recommended";
           recommendedSection.albums = albumsData.recommended;
-          contentElement.appendChild(recommendedSection);
+          content.appendChild(recommendedSection);
         }
-      });
+      };
+
+      // Execute the data fetching immediately
+      fetchData();
     </script>
   </body>
 </html>
