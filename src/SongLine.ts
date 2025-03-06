@@ -80,9 +80,9 @@ export class SongLine extends LitElement {
         </div>
         <span class="song-time"
           >${String(Math.round((this.details.time || 0) / 60)).padStart(
-      2,
-      '0'
-    )}:${String((this.details.time || 0) % 60).padStart(2, '0')}</span
+            2,
+            '0'
+          )}:${String((this.details.time || 0) % 60).padStart(2, '0')}</span
         >
       </div>
     `;
