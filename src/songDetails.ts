@@ -3,11 +3,11 @@ import { customElement, property } from 'lit/decorators.js';
 import type { SongDetails } from './models';
 
 @customElement('song-details')
-export class SongLine extends LitElement {
+export class SongDetailsView extends LitElement {
   @property({ type: Object }) details: SongDetails = {
-    imageSrc: 'art/imag_2.jpg',
-    title: 'song',
-    artist: 'song artist ',
+    imageSrc: '',
+    title: '',
+    artist: '',
   };
 
   static styles = css`
@@ -47,11 +47,11 @@ export class SongLine extends LitElement {
         width="38px"
         heigh="38px"
         src=${this.details.imageSrc}
-        alt=${this.title}
+        alt=${this.details.title}
       />
       <div class="song-details">
         <span class="song-title">${this.details.title}</span>
-        <span class="song-artist">${this.details.title}</span>
+        <span class="song-artist">${this.details.artist}</span>
       </div>
     `;
   }
