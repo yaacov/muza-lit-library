@@ -5,28 +5,42 @@ import { customElement, property } from 'lit/decorators.js';
 export class MusicAlbum extends LitElement {
   static styles = css`
     :host {
+      --primary-text-color: var(--muza-primary-text-color, #333333);
+      --secondary-text-color: var(--muza-secondary-text-color, #5f5f5f);
+      --tertiary-text-color: var(--muza-tertiary-text-color, #aaa);
+      --border-radius-sm: var(--muza-border-radius-sm, 4px);
+      --border-radius-md: var(--muza-border-radius-md, 8px);
+      --box-shadow: var(--muza-box-shadow, 0 2px 4px rgba(0, 0, 0, 0.1));
+      --spacing-xs: var(--muza-spacing-xs, 4px);
+      --spacing-sm: var(--muza-spacing-sm, 8px);
+      --spacing-md: var(--muza-spacing-md, 12px);
+      --spacing-xl: var(--muza-spacing-xl, 24px);
+      --primary-font-size: var(--muza-primary-font-size, 14px);
+      --secondary-font-size: var(--muza-secondary-font-size, 12px);
+      --font-weight-normal: var(--muza-font-weight-normal, 400);
+
       display: flex;
       flex-direction: column;
       align-items: flex-start;
       text-align: left;
-      padding: 0.85rem;
-      border-radius: 8px;
+      padding: var(--spacing-md) var(--spacing-xl) var(--spacing-md) 0;
+      border-radius: var(--border-radius-md);
     }
 
     .image-container {
       position: relative;
       width: 170px;
       height: 170px;
-      margin-bottom: 0.4rem;
+      margin-bottom: var(--spacing-sm);
       cursor: pointer;
     }
 
     img {
       width: 100%;
       height: 100%;
-      border-radius: 6px;
+      border-radius: var(--border-radius-md);
       margin-bottom: 0;
-      box-shadow: 0 2px 2px rgba(0, 0, 0, 0.3);
+      box-shadow: var(--box-shadow);
     }
 
     .play-overlay {
@@ -36,7 +50,7 @@ export class MusicAlbum extends LitElement {
       width: 100%;
       height: 100%;
       background: transparent;
-      border-radius: 4px;
+      border-radius: var(--border-radius-sm);
       display: flex;
       justify-content: center;
       align-items: center;
@@ -61,7 +75,7 @@ export class MusicAlbum extends LitElement {
       border-style: solid;
       border-width: 10px 0 10px 16px;
       border-color: transparent transparent transparent white;
-      margin-left: 4px;
+      margin-left: var(--spacing-xs);
     }
 
     .image-container:hover .play-overlay {
@@ -69,17 +83,17 @@ export class MusicAlbum extends LitElement {
     }
 
     h3 {
-      font-size: 14px;
-      color: #444;
-      font-weight: 400;
-      margin: 0 0 0.15rem 0;
+      font-size: var(--primary-font-size);
+      color: var(--primary-text-color);
+      font-weight: var(--font-weight-normal);
+      margin: 0 0 calc(var(--spacing-xs) * 0.75) 0;
       cursor: pointer;
     }
 
     p {
-      font-size: 12px;
-      color: #aaa;
-      font-weight: 400;
+      font-size: var(--secondary-font-size);
+      color: var(--tertiary-text-color);
+      font-weight: var(--font-weight-normal);
       margin: 0;
       cursor: pointer;
     }

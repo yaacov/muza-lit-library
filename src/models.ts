@@ -4,4 +4,7 @@ export interface SongDetails {
   time?: number;
   imageSrc?: string;
   artist?: string;
+  audioUrl?: string;
+  album?: string;
+  year?: number;
 }

@@ -5,6 +5,7 @@
     <title>Muza Lit Library Demo</title>
     <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="stylesheet" href="src/styles/variables.css">
     <style>
       body {
         font-family: 'Google Sans', sans-serif;
@@ -19,9 +20,9 @@
         flex: 1;
         display: flex;
         flex-direction: column;
-        padding-left: 240px; /* Width of sidebar */
-        box-sizing:border-box;
-        max-width:100vw;
+        padding-left: var(--muza-sidebar-width, 240px);
+        box-sizing: border-box;
+        max-width: 100vw;
       }
 
       .content {
@@ -30,7 +31,7 @@
         overflow-y: auto;
         height: 100vh;
         box-sizing: border-box;
-        max-width:100%;
+        max-width: 100%;
       }
 
       music-sidebar {
@@ -38,14 +39,14 @@
         left: 0;
         top: 0;
         height: 100vh;
-        width: 240px;
+        width: var(--muza-sidebar-width, 240px);
       }
 
       music-topbar {
         position: fixed;
         right: 0;
         top: 0;
-        left: 240px;
+        left: var(--muza-sidebar-width, 240px);
         z-index: 100;
       }
     </style>
@@ -60,52 +61,21 @@
     <div class="main">
       <music-topbar></music-topbar>
 
-
-
-      <div class="content">
-        <song-line id="song1"></song-line>
-        <song-details details='{
-          "imageSrc": "art/imag_2.jpg",
-          "title": "song",
-          "artist": "song artist"
-        }' ></song-details>
-
-
-        <music-section
-          title="Featured Albums"
-          albums='[
-            {"imageSrc": "art/imag_2.jpg", "title": "Orange cat", "subTitle": "1944"},
-            {"imageSrc": "art/imag_3.jpg", "title": "Paper cat", "subTitle": "2002"}
-          ]'
-        ></music-section>
-        <music-section
-          title="New Relases"
-          albums='[
-            {"imageSrc": "art/imag_3.jpg", "title": "Paper cat", "subTitle": "2002"},
-            {"imageSrc": "art/imag_1.jpg", "title": "Two cats", "subTitle": "2023"},
-            {"imageSrc": "art/imag_2.jpg", "title": "Orange cat", "subTitle": "1944"}
-          ]'
-        ></music-section>
-        <music-section
-          title="New Relases"
-          albums='[
-            {"imageSrc": "art/imag_3.jpg", "title": "Paper cat", "subTitle": "2002"},
-            {"imageSrc": "art/imag_1.jpg", "title": "Two cats", "subTitle": "2023"},
-            {"imageSrc": "art/imag_2.jpg", "title": "Orange cat", "subTitle": "1944"}
-          ]'
-        ></music-section>
-        <music-section
-          title="New Relases"
-          albums='[
-            {"imageSrc": "art/imag_3.jpg", "title": "Paper cat", "subTitle": "2002"},
-            {"imageSrc": "art/imag_1.jpg", "title": "Two cats", "subTitle": "2023"},
-            {"imageSrc": "art/imag_2.jpg", "title": "Orange cat", "subTitle": "1944"}
-          ]'
-        ></music-section>
-        
+      <div class="content" id="content">
+        <!-- Content will be generated dynamically -->
       </div>
       
     </div>
+
+    <!-- <div class="content">
+      <song-line id="song1"></song-line>
+      <song-details details='{
+        "imageSrc": "art/imag_2.jpg",
+        "title": "song",
+        "artist": "song artist"
+      }' ></song-details> -->
+      
+    <music-player id="player"></music-player>
 
     <script type="module">
       import "./src/MusicAlbum.ts";
@@ -114,33 +84,84 @@
       import "./src/SongDetails.ts";
       import "./src/MusicTopbar.ts";
       import "./src/SongLine.ts"
+      import "./src/MusicPlayer.ts";
 
+      const sidebar = document.getElementById('sidebar');
+      const content = document.getElementById('content');
+      const player = document.getElementById('player');
 
-      // Set the sections after the component is loaded
-      document.addEventListener('DOMContentLoaded', () => {
-        const sidebar = document.getElementById('sidebar');
-        document.getElementById('song2');
-
-        sidebar.sections = [
-          {
-            title: 'My Muza',
-            items: [
-              { icon: 'house', text: 'Home' },
-              { icon: 'search', text: 'Explore' }
-            ]
-          },
-          {
-            title: 'Library',
-            items: [
-              { icon: 'list', text: 'Playlists' },
-              { icon: 'heart', text: 'Albums' },
-              { icon: 'music', text: 'Artists' },
-              { icon: 'headphones', text: 'Songs' }
-            ]
-          }
-        ];
+      // Add handler for song-selected event
+      document.addEventListener("song-selected", (event) => {
+        // Create player data object from event details
+        const data = {
+          src: event.detail.audioUrl,
+          imageSrc: event.detail.imageSrc,
+          title: event.detail.title,
+          artist: event.detail.artist,
+          album: event.detail.album,
+          year: event.detail.year,
+          isPlaying: false
+        };
+        
+        // Update the player details (single update)
+        player.details = data;
+      });
+      
+      // Volume change handler
+      document.addEventListener("volume-change", (event) => {
+        player.updateVolume(event.detail.value/100);
       });
 
+      // Fetch sidebar data from JSON file
+      const fetchData = async () => {
+        // Fetch sidebar data from JSON file
+        const sidebarResponse = await fetch('data/sidebar.json');
+        const sidebarData = await sidebarResponse.json();
+        sidebar.sections = sidebarData.sections;
+
+        const songsResponse = await fetch('data/songs.json');
+        const songsData = await songsResponse.json();
+
+        // Create Songs section with dynamically generated song-lines
+        if (songsData.songs && songsData.songs.length > 0) {
+          songsData.songs.forEach(song => {
+            const songLine = document.createElement('song-line');
+            songLine.details = song;
+            content.appendChild(songLine);
+          });
+        }
+
+        // Fetch album and song data
+        const albumsResponse = await fetch('data/albums.json');
+        const albumsData = await albumsResponse.json();
+        
+        // Create Featured Albums section
+        if (albumsData.featured && albumsData.featured.length > 0) {
+          const featuredSection = document.createElement('music-section');
+          featuredSection.title = "Featured Albums";
+          featuredSection.albums = albumsData.featured;
+          content.appendChild(featuredSection);
+        }
+
+        // Create New Releases section
+        if (albumsData.newReleases && albumsData.newReleases.length > 0) {
+          const newReleasesSection = document.createElement('music-section');
+          newReleasesSection.title = "New Releases";
+          newReleasesSection.albums = albumsData.newReleases;
+          content.appendChild(newReleasesSection);
+        }
+
+        // Create Recommended section
+        if (albumsData.recommended && albumsData.recommended.length > 0) {
+          const recommendedSection = document.createElement('music-section');
+          recommendedSection.title = "Recommended";
+          recommendedSection.albums = albumsData.recommended;
+          content.appendChild(recommendedSection);
+        }
+      };
+
+      // Execute the data fetching immediately
+      fetchData();
     </script>
   </body>
 </html>

@@ -1,0 +1,57 @@
+:root {
+  /* Colors */
+  --muza-primary-text-color: #333333;
+  --muza-secondary-text-color: #5f5f5f;
+  --muza-tertiary-text-color: #aaa;
+  --muza-border-color: #a9a9a9;
+  --muza-hover-background: #eeeeee;
+  --muza-button-background: #eeeeee;
+  --muza-button-hover-background: #dddddd;
+  --muza-slider-track-color: #c2c2c2;
+  --muza-slider-fill-color: #5f5f5f;
+  --muza-section-title-color: #5f5f5f;
+  --muza-section-subtitle-color: #aaa;
+  --muza-section-button-color: #333333;
+  --muza-section-border-color: #a9a9a9;
+  --muza-section-scrollbar-button-bg: #eeeeee;
+  --muza-section-scrollbar-track-bg: #c2c2c2;
+  --muza-section-scrollbar-thumb-bg: #5f5f5f;
+
+  /* Typography */
+  --muza-primary-font-size: 14px;
+  --muza-secondary-font-size: 12px;
+  --muza-heading-font-size: 18px;
+  --muza-font-weight-normal: 400;
+  --muza-font-weight-medium: 500;
+  --muza-font-weight-bold: 600;
+  --muza-songline-title-font-size: 16px;
+  --muza-songline-number-font-size: 16px;
+  --muza-songline-duration-font-size: 15px;
+  --muza-section-button-font-size: 12px;
+
+  /* Spacing and Layout */
+  --muza-spacing-xs: 4px;
+  --muza-spacing-sm: 8px;
+  --muza-spacing-md: 12px;
+  --muza-spacing-lg: 16px;
+  --muza-spacing-xl: 24px;
+  --muza-spacing-xxl: 36px;
+  --muza-sidebar-width: 240px;
+  --muza-song-line-height: 24px;
+  --muza-songline-padding: 8px 8px;
+  --muza-songline-height: 28px;
+  --muza-section-margin-bottom: 32px;
+  --muza-section-header-margin: 0 0 2px 16px;
+  --muza-section-header-padding-bottom: 5px;
+  --muza-section-header-min-height: 32px;
+  --muza-section-header-margin-top: 32px;
+  --muza-section-header-padding-top: 5px;
+  --muza-section-button-padding: 6px 10px;
+  --muza-section-scrollbar-height: 9px;
+
+  /* Elements */
+  --muza-border-radius-sm: 4px;
+  --muza-border-radius-md: 8px;
+  --muza-border-radius-lg: 20px;
+  --muza-box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
