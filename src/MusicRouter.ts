@@ -25,20 +25,34 @@ interface ExtendedSongDetails extends SongDetails {
   id?: number;
 }
 
+// Player interface to replace 'any' type
+interface MusicPlayer {
+  details: {
+    src: string;
+    imageSrc: string;
+    title: string;
+    artist: string;
+    album: string;
+    year: number;
+    isPlaying: boolean;
+  };
+  updateVolume?: (volume: number) => void;
+}
+
 @customElement('music-router')
 export class MusicRouter extends LitElement {
-  @property({ type: Object }) 
+  @property({ type: Object })
   albums: AlbumCollection = {
     featured: [],
     newReleases: [],
-    recommended: []
+    recommended: [],
   };
-  
+
   @property({ type: Array })
   songs: ExtendedSongDetails[] = [];
 
   @property({ type: Object })
-  player: any = null;
+  player: MusicPlayer | null = null;
 
   // Keep track of currently selected page
   @property({ type: String })
@@ -49,7 +63,7 @@ export class MusicRouter extends LitElement {
 
   constructor() {
     super();
-    
+
     // Initialize router with routes
     this.router = new Router(this, [
       {
@@ -57,50 +71,50 @@ export class MusicRouter extends LitElement {
         render: () => {
           this.currentPage = 'home';
           return this.renderHomePage();
-        }
+        },
       },
       {
         path: '/explore',
         render: () => {
           this.currentPage = 'explore';
           return this.renderExplorePage();
-        }
+        },
       },
       {
         path: '/playlists',
         render: () => {
           this.currentPage = 'playlists';
           return this.renderPlaylistsPage();
-        }
+        },
       },
       {
         path: '/albums',
         render: () => {
           this.currentPage = 'albums';
           return this.renderAlbumsPage();
-        }
+        },
       },
       {
         path: '/artists',
         render: () => {
           this.currentPage = 'artists';
           return this.renderArtistsPage();
-        }
+        },
       },
       {
         path: '/songs',
         render: () => {
           this.currentPage = 'songs';
           return this.renderSongsPage();
-        }
+        },
       },
       {
         path: '/album/:id',
         render: (params) => {
           this.currentPage = 'album-detail';
           return this.renderAlbumDetail(params.id || '');
-        }
-      }
+        },
+      },
     ]);
   }
 
@@ -115,12 +129,13 @@ export class MusicRouter extends LitElement {
 
   // Song listing page
   private renderSongsPage() {
+    // Move map operation outside of template
+    const songElements = this.songs.map((song) => this.renderSong(song));
+
     return html`
       <div class="songs-content">
         <h2>All Songs</h2>
-        <div id="songs-container">
-          ${this.songs.map(song => this.renderSong(song))}
-        </div>
+        <div id="songs-container">${songElements}</div>
       </div>
     `;
   }
@@ -132,20 +147,24 @@ export class MusicRouter extends LitElement {
     const newReleases = this.albums.newReleases || [];
     const recommended = this.albums.recommended || [];
     const allAlbums = [...featuredAlbums, ...newReleases, ...recommended];
-    
+
+    // Move map operation outside of template
+    const albumElements = allAlbums.map(
+      (album) => html`
+        <music-album
+          image-src=${album.imageSrc}
+          title=${album.title}
+          sub-title=${album.subTitle}
+          @album-selected=${() => this.navigateToAlbum(album.id)}
+        >
+        </music-album>
+      `
+    );
+
     return html`
       <div class="albums-content">
         <h2>All Albums</h2>
-        <div class="albums-grid">
-          ${allAlbums.map(album => html`
-            <music-album 
-              image-src=${album.imageSrc} 
-              title=${album.title} 
-              sub-title=${album.subTitle}
-              @album-selected=${() => this.navigateToAlbum(album.id)}>
-            </music-album>
-          `)}
-        </div>
+        <div class="albums-grid">${albumElements}</div>
       </div>
     `;
   }
@@ -157,15 +176,18 @@ export class MusicRouter extends LitElement {
     const newReleases = this.albums.newReleases || [];
     const recommended = this.albums.recommended || [];
     const allAlbums = [...featuredAlbums, ...newReleases, ...recommended];
-    const album = allAlbums.find(a => a.id === id);
-    
+    const album = allAlbums.find((a) => a.id === id);
+
     if (!album) {
       return html`<div>Album not found</div>`;
     }
 
     // Get songs for this album
-    const albumSongs = this.songs.filter(song => song.albumId === id);
-    
+    const albumSongs = this.songs.filter((song) => song.albumId === id);
+
+    // Move map operation outside of template
+    const songElements = albumSongs.map((song) => this.renderSong(song));
+
     return html`
       <div class="album-detail">
         <div class="album-header">
@@ -175,40 +197,43 @@ export class MusicRouter extends LitElement {
             <h3>${album.artist} • ${album.subTitle}</h3>
           </div>
         </div>
-        
-        <div class="album-songs">
-          ${albumSongs.map(song => this.renderSong(song))}
-        </div>
+
+        <div class="album-songs">${songElements}</div>
       </div>
     `;
   }
 
   // Template placeholders for other routes
   private renderExplorePage() {
-    return html`<h2>Explore Music</h2><p>Discover new music here...</p>`;
+    return html`<h2>Explore Music</h2>
+      <p>Discover new music here...</p>`;
   }
-  
+
   private renderPlaylistsPage() {
-    return html`<h2>Your Playlists</h2><p>Playlists will appear here...</p>`;
+    return html`<h2>Your Playlists</h2>
+      <p>Playlists will appear here...</p>`;
   }
-  
+
   private renderArtistsPage() {
-    return html`<h2>Artists</h2><p>Your favorite artists will appear here...</p>`;
+    return html`<h2>Artists</h2>
+      <p>Your favorite artists will appear here...</p>`;
   }
 
   // Helper method to render a song with click handler
   private renderSong(song: ExtendedSongDetails) {
     // Type cast the element to include details property
-    const songLine = document.createElement('song-line') as HTMLElement & { details: ExtendedSongDetails };
+    const songLine = document.createElement('song-line') as HTMLElement & {
+      details: ExtendedSongDetails;
+    };
     songLine.details = song;
     songLine.addEventListener('click', () => this.playSong(song));
     return songLine;
   }
-  
+
   // Method to play a song - preserves the existing music playing logic
   private playSong(song: ExtendedSongDetails) {
     if (!this.player || !song) return;
-    
+
     const data = {
       src: song.audioUrl || '',
       imageSrc: song.imageSrc || '',
@@ -216,54 +241,50 @@ export class MusicRouter extends LitElement {
       artist: song.artist || '',
       album: song.album || '',
       year: song.year || 0,
-      isPlaying: true
+      isPlaying: true,
     };
 
     // Update the player details
     this.player.details = data;
   }
-  
+
   // Navigation methods
   navigateToHome() {
     window.history.pushState({}, '', '/');
     this.router.goto('/');
   }
-  
+
   navigateToExplore() {
     window.history.pushState({}, '', '/explore');
     this.router.goto('/explore');
   }
-  
+
   navigateToPlaylists() {
     window.history.pushState({}, '', '/playlists');
     this.router.goto('/playlists');
   }
-  
+
   navigateToAlbums() {
     window.history.pushState({}, '', '/albums');
     this.router.goto('/albums');
   }
-  
+
   navigateToArtists() {
     window.history.pushState({}, '', '/artists');
     this.router.goto('/artists');
   }
-  
+
   navigateToSongs() {
     window.history.pushState({}, '', '/songs');
     this.router.goto('/songs');
   }
-  
+
   navigateToAlbum(id: string) {
     window.history.pushState({}, '', `/album/${id}`);
     this.router.goto(`/album/${id}`);
   }
 
   render() {
-    return html`
-      <div class="router-outlet">
-        ${this.router.outlet()}
-      </div>
-    `;
+    return html`<div class="router-outlet">${this.router.outlet()}</div>`;
   }
 }
