@@ -52,6 +52,7 @@
     "vitest": "^3.0.4"
   },
   "dependencies": {
+    "@lit-labs/router": "^0.1.4",
     "lit": "^3.2.1"
   }
 }
