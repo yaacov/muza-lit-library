@@ -13,8 +13,7 @@ export class SongLine extends LitElement {
     artist: '',
     album: '',
     year: 0,
-  };
-
+  }
   static styles = css`
     :host {
       --primary-text-color: var(--muza-primary-text-color, #000000);
@@ -89,6 +88,31 @@ export class SongLine extends LitElement {
       font-weight: bold;
       font-size: var(--song-duration-font-size);
     }
+      .wave-container {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 3px;
+      width: 20px;
+      height: 20px;
+      margin-right: 8px;
+
+    }
+
+    .bar {
+      width: 30%;
+      height: 100%;
+      border-radius: 5px;
+      animation: wave 1s infinite ease-in-out;
+      background-color: var(--tertiary-text-color);
+    }
+    .bar:nth-child(1) { animation-delay: 0.0s; }
+    .bar:nth-child(2) { animation-delay: 0.2s; }
+    .bar:nth-child(3) { animation-delay: 0.4s; }
+     @keyframes wave {
+      0%, 100% { height: 40%; }
+      50% { height: 90%; }
+    }
   `;
 
   private formatSongNumber(number: number): string {
@@ -101,9 +125,27 @@ export class SongLine extends LitElement {
     return `${String(minutes).padStart(2, '0')}:${String(
       remainingSeconds
     ).padStart(2, '0')}`;
+
+  }
+  private renderIcon(){
+
+    return  this.details.isPlaying?html`
+    <div class="wave-container">
+    <div class="bar"></div>
+    <div class="bar"></div>
+    <div class="bar"></div>
+     </div >
+     `:html`
+    <span class="track-number"
+            >${this.formatSongNumber(this.details.index || 1)}</span
+          >
+          <span class="play-icon">
+            <i class="fa-solid fa-play"></i>
+          </span>`;
   }
 
   render() {
+    
     return html`
       <link
         rel="stylesheet"
@@ -111,12 +153,7 @@ export class SongLine extends LitElement {
       />
       <div class="song-container">
         <div class="track-info">
-          <span class="track-number"
-            >${this.formatSongNumber(this.details.index || 1)}</span
-          >
-          <span class="play-icon">
-            <i class="fa-solid fa-play"></i>
-          </span>
+          ${this.renderIcon()}
           <span class="track-title">${this.details.title}</span>
         </div>
         <span class="track-duration"

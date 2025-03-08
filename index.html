@@ -97,11 +97,12 @@
 
       // Create Songs section with dynamically generated song-lines
       if (songsData.songs && songsData.songs.length > 0) {
-        songsData.songs.forEach(song => {
+        songsData.songs.forEach((song, index) => {
           const songLine = document.createElement('song-line');
-          songLine.details = song;
+          songLine.details = {...song, isPlaying: (song.id==player.details.id), index:index+1 };
           songLine.addEventListener('click', (event) => {
             // Create player data object from event details
+
             const songLine = event.target.details;
             
             const data = {
@@ -109,9 +110,9 @@
               imageSrc: songLine.imageSrc,
               title: songLine.title,
               artist: songLine.artist,
-              album: songLine.album,
-              year: songLine.year,
-              isPlaying: true
+              album: songLine.allbum,
+              isPlaying: true,
+              id:songLine.id
             };
 
             // Update the player details (single update)
