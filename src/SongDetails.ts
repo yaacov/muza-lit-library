@@ -15,7 +15,6 @@ export class SongDetailsView extends LitElement {
       display: flex;
       justify-content: flex-start;
       align-items: center;
-      padding: 11px 7px;
       gap: 7px;
       font-size: 14px;
 
