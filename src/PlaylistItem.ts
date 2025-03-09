@@ -19,44 +19,46 @@ export class SongDetailsView extends LitElement {
       --border-color: var(--muza-border-color, #a9a9a9);
 
       display: flex;
-      justify-content:space-between;
+      justify-content: space-between;
 
       border-bottom: solid var(--border-color) 1px;
       align-items: center;
 
-      .right{
+      .right {
         display: flex;
         justify-content: flex-start;
         align-items: center;
         gap: 2px;
         font-size: 17px;
-        padding:10px 9px;
-        
+        padding: 10px 9px;
+
         .track-number {
-          padding:7px;
+          padding: 7px;
           color: var(--tertiary-text-color);
           min-width: 20px;
           display: inline-block;
           font-size: var(--song-title-font-size);
         }
       }
-      .left{
+      .left {
         border-radius: 50%;
         background-color: var(--button-background);
         width: 26px;
         height: 26px;
-        display: flex; 
+        display: flex;
         justify-content: center;
-        font-size:12px;
+        font-size: 12px;
         align-items: center;
-      } 
+      }
     }
   `;
 
   render() {
     return html`
       <span class="right">
-        <span class="track-number">${formatSongNumber(this.details.index || 1)}</span>
+        <span class="track-number"
+          >${formatSongNumber(this.details.index || 1)}</span
+        >
         <song-details .details=${this.details}></song-details>
       </span>
       <span class="left">•••</span>
