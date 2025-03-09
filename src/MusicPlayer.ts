@@ -10,7 +10,7 @@ interface PlayerDetails {
   album: string;
   year: number;
   isPlaying: boolean;
-  id?:string;
+  id?: string;
 }
 
 @customElement('music-player')
@@ -128,18 +128,18 @@ export class MusicPlayer extends LitElement {
     this.progressPercentage = this.getProgressPercentage();
   }
 
-  private updateSongsLine(){
-    (document.querySelectorAll('song-line') as NodeListOf<SongLine>)
-      .forEach((songLine: SongLine ) => {
+  private updateSongsLine() {
+    (document.querySelectorAll('song-line') as NodeListOf<SongLine>).forEach(
+      (songLine: SongLine) => {
         if (songLine.details.id === this.details.id) {
-          songLine.details.isPlaying=true
-          songLine.requestUpdate() 
+          songLine.details.isPlaying = true;
+          songLine.requestUpdate();
         } else {
-          songLine.details.isPlaying=false
-          songLine.requestUpdate() 
-       
+          songLine.details.isPlaying = false;
+          songLine.requestUpdate();
         }
-      });
+      }
+    );
   }
   protected updated(changedProperties: Map<PropertyKey, unknown>) {
     if (changedProperties.has('details')) {
@@ -147,7 +147,7 @@ export class MusicPlayer extends LitElement {
         | PlayerDetails
         | undefined;
       const srcChanged = !oldDetails || oldDetails.src !== this.details.src;
-      this.updateSongsLine()
+      this.updateSongsLine();
       // Only reload the audio if the source has changed
       if (srcChanged && this.details.src) {
         if (this.audioElement) {
@@ -171,7 +171,6 @@ export class MusicPlayer extends LitElement {
           if (!this.listenersAttached) {
             this._attachAudioListeners();
           }
-
         }
 
         // Don't call _syncPlayState immediately, let the loadeddata event handle it

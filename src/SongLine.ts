@@ -13,7 +13,7 @@ export class SongLine extends LitElement {
     artist: '',
     album: '',
     year: 0,
-  }
+  };
   static styles = css`
     :host {
       --primary-text-color: var(--muza-primary-text-color, #000000);
@@ -88,7 +88,7 @@ export class SongLine extends LitElement {
       font-weight: bold;
       font-size: var(--song-duration-font-size);
     }
-      .wave-container {
+    .wave-container {
       display: flex;
       align-items: center;
       justify-content: center;
@@ -96,7 +96,6 @@ export class SongLine extends LitElement {
       width: 20px;
       height: 20px;
       margin-right: 8px;
-
     }
 
     .bar {
@@ -106,12 +105,23 @@ export class SongLine extends LitElement {
       animation: wave 1s infinite ease-in-out;
       background-color: var(--tertiary-text-color);
     }
-    .bar:nth-child(1) { animation-delay: 0.0s; }
-    .bar:nth-child(2) { animation-delay: 0.2s; }
-    .bar:nth-child(3) { animation-delay: 0.4s; }
-     @keyframes wave {
-      0%, 100% { height: 40%; }
-      50% { height: 90%; }
+    .bar:nth-child(1) {
+      animation-delay: 0s;
+    }
+    .bar:nth-child(2) {
+      animation-delay: 0.2s;
+    }
+    .bar:nth-child(3) {
+      animation-delay: 0.4s;
+    }
+    @keyframes wave {
+      0%,
+      100% {
+        height: 40%;
+      }
+      50% {
+        height: 90%;
+      }
     }
   `;
 
@@ -125,18 +135,17 @@ export class SongLine extends LitElement {
     return `${String(minutes).padStart(2, '0')}:${String(
       remainingSeconds
     ).padStart(2, '0')}`;
-
   }
-  private renderIcon(){
-
-    return  this.details.isPlaying?html`
-    <div class="wave-container">
-    <div class="bar"></div>
-    <div class="bar"></div>
-    <div class="bar"></div>
-     </div >
-     `:html`
-    <span class="track-number"
+  private renderIcon() {
+    return this.details.isPlaying
+      ? html`
+          <div class="wave-container">
+            <div class="bar"></div>
+            <div class="bar"></div>
+            <div class="bar"></div>
+          </div>
+        `
+      : html` <span class="track-number"
             >${this.formatSongNumber(this.details.index || 1)}</span
           >
           <span class="play-icon">
@@ -145,7 +154,6 @@ export class SongLine extends LitElement {
   }
 
   render() {
-    
     return html`
       <link
         rel="stylesheet"
