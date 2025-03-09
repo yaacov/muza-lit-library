@@ -24,7 +24,7 @@ export class SongDetailsView extends LitElement {
       border-bottom: solid var(--border-color) 1px;
       align-items: center;
 
-      .right {
+      .left {
         display: flex;
         justify-content: flex-start;
         align-items: center;
@@ -40,28 +40,18 @@ export class SongDetailsView extends LitElement {
           font-size: var(--song-title-font-size);
         }
       }
-      .left {
-        border-radius: 50%;
-        background-color: var(--button-background);
-        width: 26px;
-        height: 26px;
-        display: flex;
-        justify-content: center;
-        font-size: 12px;
-        align-items: center;
-      }
     }
   `;
 
   render() {
     return html`
-      <span class="right">
+      <span class="left">
         <span class="track-number"
           >${formatSongNumber(this.details.index || 1)}</span
         >
         <song-details .details=${this.details}></song-details>
       </span>
-      <span class="left">•••</span>
+      <muza-button content="•••"></muza-button>
     `;
   }
 }

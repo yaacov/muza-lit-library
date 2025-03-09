@@ -21,7 +21,7 @@ export class SongLine extends LitElement {
       --secondary-text-color: var(--muza-secondary-text-color, #5f5f5f);
       --tertiary-text-color: var(--muza-tertiary-text-color, #888888);
       --border-color: var(--muza-border-color, #a9a9a9);
-      --hover-background: var(--muza-hover-background, #ededed);
+      --hover-background: var(--muza-buttons-color, #ededed);
       --song-title-font-size: var(--muza-songline-title-font-size, 16px);
       --song-number-font-size: var(--muza-songline-number-font-size, 14px);
       --song-duration-font-size: var(--muza-songline-duration-font-size, 14px);

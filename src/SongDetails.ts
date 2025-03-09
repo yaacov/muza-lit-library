@@ -20,7 +20,7 @@ export class SongDetailsView extends LitElement {
 
       img {
         border-radius: 3px;
-        backgruond-color: #d9d9d9;
+        background-color: var(--muza-image-background-color-bg, #d9d9d9);
       }
       .song-details {
         display: flex;
