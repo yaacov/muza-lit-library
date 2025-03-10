@@ -15,13 +15,12 @@ export class SongDetailsView extends LitElement {
       display: flex;
       justify-content: flex-start;
       align-items: center;
-      padding: 11px 7px;
       gap: 7px;
       font-size: 14px;
 
       img {
         border-radius: 3px;
-        backgruond-color: #d9d9d9;
+        background-color: var(--muza-image-background-color-bg, #d9d9d9);
       }
       .song-details {
         display: flex;

@@ -2,6 +2,7 @@
   /* Colors */
   --muza-primary-text-color: #333333;
   --muza-secondary-text-color: #5f5f5f;
+  --muza-buttons-color: #ededed;
   --muza-tertiary-text-color: #aaa;
   --muza-border-color: #a9a9a9;
   --muza-hover-background: #eeeeee;
@@ -16,14 +17,17 @@
   --muza-section-scrollbar-button-bg: #eeeeee;
   --muza-section-scrollbar-track-bg: #c2c2c2;
   --muza-section-scrollbar-thumb-bg: #5f5f5f;
+  --muza-image-background-color-bg: #d9d9d9;
 
   /* Typography */
   --muza-primary-font-size: 14px;
+  --muza-title-font-size: 27px;
   --muza-secondary-font-size: 12px;
   --muza-heading-font-size: 18px;
   --muza-font-weight-normal: 400;
   --muza-font-weight-medium: 500;
   --muza-font-weight-bold: 600;
+  --muza-font-weight-bold-extra: 700;
   --muza-songline-title-font-size: 16px;
   --muza-songline-number-font-size: 16px;
   --muza-songline-duration-font-size: 15px;
