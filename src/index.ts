@@ -5,3 +5,4 @@ export { MusicTopbar } from './MusicTopbar';
 export { VolumeControl } from './VolumeControl';
 export { SongLine } from './SongLine';
 export { MusicPlayer } from './MusicPlayer';
+export { AlbumDetails } from './AlbumDetails';
