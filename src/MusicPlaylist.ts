@@ -104,8 +104,6 @@ export class MusicPlaylist extends LitElement {
         <div class="top">
           <div class="buttons">
             <muza-button content="x"></muza-button>
-            // eslint-disable-next-line lit/attribute-value-entities,
-            lit/attribute-value-entities
             <muza-button content="&#xf065;"></muza-button>
           </div>
           <small-album-details

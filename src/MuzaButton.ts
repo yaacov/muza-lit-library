@@ -18,7 +18,7 @@ export class MuzaButton extends LitElement {
       font-size: 10px;
       align-items: center;
       font-family: FontAwesome;
-    } 
+    }
   `;
 
   render() {
