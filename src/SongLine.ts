@@ -35,92 +35,91 @@ export class SongLine extends LitElement {
       border-top: 1px solid var(--border-color);
       height: var(--song-line-height);
       cursor: default;
+    }
+    .song-container {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-direction: row;
+      width: 100%;
+    }
 
-      .song-container {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        flex-direction: row;
-        width: 100%;
-      }
+    .track-info {
+      display: flex;
+      align-items: center;
+      min-width: 20px;
+    }
 
-      .track-info {
-        display: flex;
-        align-items: center;
-        min-width: 20px;
-      }
+    .track-number {
+      color: var(--tertiary-text-color);
+      margin-right: 8px;
+      min-width: 20px;
+      display: inline-block;
+      font-size: var(--song-title-font-size);
+    }
 
-      .track-number {
-        color: var(--tertiary-text-color);
-        margin-right: 8px;
-        min-width: 20px;
-        display: inline-block;
-        font-size: var(--song-title-font-size);
-      }
+    .play-icon {
+      display: none;
+      color: var(--tertiary-text-color);
+      margin-right: 8px;
+      min-width: 20px;
+      text-align: center;
+    }
 
-      .play-icon {
-        display: none;
-        color: var(--tertiary-text-color);
-        margin-right: 8px;
-        min-width: 20px;
-        text-align: center;
-      }
+    .track-title {
+      color: var(--primary-text-color);
+      font-size: var(--song-title-font-size);
+    }
 
-      .track-title {
-        color: var(--primary-text-color);
-        font-size: var(--song-title-font-size);
-      }
+    .track-duration {
+      color: var(--tertiary-text-color);
+      font-weight: bold;
+      font-size: var(--song-duration-font-size);
+    }
+    .wave-container {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 3px;
+      width: 20px;
+      height: 20px;
+      margin-right: 8px;
+    }
 
-      .track-duration {
-        color: var(--tertiary-text-color);
-        font-weight: bold;
-        font-size: var(--song-duration-font-size);
-      }
-      .wave-container {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 3px;
-        width: 20px;
-        height: 20px;
-        margin-right: 8px;
-      }
+    .bar {
+      width: 30%;
+      height: 100%;
+      border-radius: 5px;
+      animation: wave 1s infinite ease-in-out;
+      background-color: var(--tertiary-text-color);
+    }
 
-      .bar {
-        width: 30%;
-        height: 100%;
-        border-radius: 5px;
-        animation: wave 1s infinite ease-in-out;
-        background-color: var(--tertiary-text-color);
+    .bar:nth-child(0) {
+      animation-delay: 0s;
+    }
+    .bar:nth-child(1) {
+      animation-delay: 0.2s;
+    }
+    .bar:nth-child(3) {
+      animation-delay: 0.4s;
+    }
+
+    @keyframes wave {
+      0%,
+      100% {
+        height: 40%;
       }
-      .bar:nth-child(1) {
-        animation-delay: 0s;
-      }
-      .bar:nth-child(2) {
-        animation-delay: 0.2s;
-      }
-      .bar:nth-child(3) {
-        animation-delay: 0.4s;
-      }
-      @keyframes wave {
-        0%,
-        100% {
-          height: 40%;
-        }
-        50% {
-          height: 90%;
-        }
+      50% {
+        height: 90%;
       }
     }
 
     :host(:hover) {
       background: var(--hover-background);
     }
-
     :host(:hover) .track-number {
       display: none;
     }
-
     :host(:hover) .play-icon {
       display: inline-block;
     }

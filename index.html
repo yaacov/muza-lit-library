@@ -75,7 +75,8 @@
     import "./src/MusicTopbar.ts";
     import "./src/SongLine.ts"
     import "./src/MusicPlayer.ts";
-
+    import "./src/AlbumDetails.ts"
+    
     const sidebar = document.getElementById('sidebar');
     const content = document.getElementById('content');
     const player = document.getElementById('player');
@@ -127,7 +128,11 @@
       // Fetch album and song data
       const albumsResponse = await fetch('data/albums.json');
       const albumsData = await albumsResponse.json();
-
+      if (albumsData.featured && albumsData.featured.length > 0) {
+        const details = document.createElement('album-details');
+        details.details = albumsData.featured[0]
+        content.prepend(details);
+      }
       // Create Featured Albums section
       if (albumsData.featured && albumsData.featured.length > 0) {
         const featuredSection = document.createElement('music-section');
@@ -135,6 +140,7 @@
         featuredSection.albums = albumsData.featured;
         content.appendChild(featuredSection);
       }
+      
 
       // Create New Releases section
       if (albumsData.newReleases && albumsData.newReleases.length > 0) {
