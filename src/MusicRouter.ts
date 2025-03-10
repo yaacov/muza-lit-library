@@ -25,7 +25,7 @@ interface ExtendedSongDetails extends SongDetails {
   id?: number;
 }
 
-// Player interface to replace 'any' type
+// Player interface
 interface MusicPlayer {
   details: {
     src: string;
@@ -39,13 +39,11 @@ interface MusicPlayer {
   updateVolume?: (volume: number) => void;
 }
 
-// Our custom route configuration interface
+// Route configuration interface
 export interface CustomRouteConfig {
   path: string;
   name: string;
   component: HTMLElement | (() => HTMLElement);
-  // For parameterized routes
-  params?: Record<string, string>;
 }
 
 @customElement('music-router')
@@ -74,20 +72,13 @@ export class MusicRouter extends LitElement {
   @property({ type: Object })
   player: MusicPlayer | null = null;
 
-  // Array of route configurations
   @property({ type: Array })
   routes: CustomRouteConfig[] = [];
 
-  // Keep track of currently selected page
   @property({ type: String })
   currentPage = 'home';
 
-  // Reference to the router - initialized in constructor
   private router: Router = new Router(this, []);
-
-  constructor() {
-    super();
-  }
 
   connectedCallback() {
     super.connectedCallback();
@@ -98,51 +89,49 @@ export class MusicRouter extends LitElement {
     if (changedProps.has('routes') && this.routes.length > 0) {
       this.initializeRouter();
     }
+    
+    if (changedProps.has('currentPage')) {
+      this.dispatchEvent(new CustomEvent('currentPageChanged', {
+        detail: { page: this.currentPage },
+        bubbles: true,
+        composed: true
+      }));
+    }
   }
 
-  // Initialize router with the provided routes
   private initializeRouter() {
     if (!this.routes || this.routes.length === 0) return;
 
-    // Convert our custom route config to the format expected by Router
-    const routerConfig: RouteConfig[] = this.routes.map(routeConfig => {
-      const pathConfig: PathRouteConfig = {
-        path: routeConfig.path,
-        render: (params: { [key: string]: string | undefined }) => {
-          this.currentPage = routeConfig.name;
-          
-          // Handle component function or element
-          let component;
-          if (typeof routeConfig.component === 'function') {
-            component = routeConfig.component();
-          } else {
-            component = routeConfig.component;
-          }
-
-          // If it's a parameterized route, dispatch event with params
-          if (routeConfig.path.includes(':')) {
-            this.dispatchEvent(new CustomEvent('route-params-changed', {
-              detail: { 
-                params: params as Record<string, string>, 
-                routeName: routeConfig.name 
-              },
-              bubbles: true,
-              composed: true
-            }));
-          }
-
-          return component;
+    const routerConfig: RouteConfig[] = this.routes.map(routeConfig => ({
+      path: routeConfig.path,
+      render: (params: { [key: string]: string | undefined }) => {
+        this.currentPage = routeConfig.name;
+        
+        let component;
+        if (typeof routeConfig.component === 'function') {
+          component = routeConfig.component();
+        } else {
+          component = routeConfig.component;
         }
-      };
 
-      return pathConfig;
-    });
+        if (routeConfig.path.includes(':')) {
+          this.dispatchEvent(new CustomEvent('route-params-changed', {
+            detail: { 
+              params: params as Record<string, string>, 
+              routeName: routeConfig.name 
+            },
+            bubbles: true,
+            composed: true
+          }));
+        }
 
-    // Initialize router with new config
+        return component;
+      }
+    }));
+
     this.router = new Router(this, routerConfig);
   }
 
-  // Method to play a song
   playSong(song: ExtendedSongDetails) {
     if (!this.player || !song) return;
 
@@ -156,17 +145,15 @@ export class MusicRouter extends LitElement {
       isPlaying: true,
     };
 
-    // Update the player details
     this.player.details = data;
   }
 
-  // Generic navigation method
   navigate(path: string) {
     window.history.pushState({}, '', path);
     this.router.goto(path);
   }
 
   render() {
-    return html`<div class="router-outlet">${this.router ? this.router.outlet() : html`<slot></slot>`}</div>`;
+    return html`<div class="router-outlet">${this.router.outlet()}</div>`;
   }
 }

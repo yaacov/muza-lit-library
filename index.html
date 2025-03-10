@@ -51,6 +51,49 @@
       left: var(--muza-sidebar-width, 240px);
       z-index: 100;
     }
+
+    .home-page {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .album-detail {
+      margin-top: var(--muza-spacing-xl, 24px);
+    }
+
+    .album-header {
+      display: flex;
+      gap: 30px;
+      margin-bottom: 30px;
+    }
+
+    .album-header img {
+      width: 200px;
+      height: 200px;
+      border-radius: var(--muza-border-radius-md, 8px);
+      box-shadow: var(--muza-box-shadow, 0 4px 8px rgba(0,0,0,0.2));
+    }
+
+    .album-info {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .album-info h1 {
+      margin: 0 0 10px 0;
+    }
+
+    .album-info h3 {
+      margin: 0;
+      color: var(--muza-secondary-text-color, #666);
+    }
+
+    .songs-container {
+      display: flex;
+      flex-direction: column;
+    }
   </style>
 </head>
 
@@ -59,11 +102,12 @@
   </music-sidebar>
 
   <div class="main">
-    <music-topbar></music-topbar>
+    <music-topbar id="topbar"></music-topbar>
 
-    <div class="content" id="content">
-      <!-- Content will be generated dynamically -->
+    <div class="content">
+      <music-router id="router"></music-router>
     </div>
+  </div>
 
   <music-player id="player"></music-player>
 
@@ -75,80 +119,176 @@
     import "./src/MusicTopbar.ts";
     import "./src/SongLine.ts"
     import "./src/MusicPlayer.ts";
+    import "./src/MusicRouter.ts";
 
     const sidebar = document.getElementById('sidebar');
-    const content = document.getElementById('content');
+    const router = document.getElementById('router');
     const player = document.getElementById('player');
+    const topbar = document.getElementById('topbar');
+
+    // Create page components for different routes
+    const homePage = document.createElement('div');
+    homePage.className = 'home-page';
+
+    const songsPage = document.createElement('div');
+    songsPage.className = 'songs-container';
+    songsPage.innerHTML = '<h2>All Songs</h2>';
+
+    // Set up initial routes
+    router.routes = [
+      { path: '/', name: 'home', component: homePage },
+      { path: '/songs', name: 'songs', component: songsPage },
+      { path: '/album/:id', name: 'album-detail', component: document.createElement('div') }
+    ];
 
     // Volume change handler
-    document.addEventListener("volume-change", (event) => {
+    topbar.addEventListener("volume-change", (event) => {
       player.updateVolume(event.detail.value / 100);
     });
 
-    // Fetch sidebar data from JSON file
+    // Fetch data and set up router
     const fetchData = async () => {
       // Fetch sidebar data from JSON file
       const sidebarResponse = await fetch('data/sidebar.json');
       const sidebarData = await sidebarResponse.json();
-      sidebar.sections = sidebarData.sections;
+      
+      // Transform sidebar data to include navigation actions
+      const transformedSections = sidebarData.sections.map(section => {
+        const items = section.items.map(item => {
+          // Add action based on text
+          if (item.text === 'Home') {
+            return { ...item, action: () => router.navigate('/') };
+          } else if (item.text === 'Songs') {
+            return { ...item, action: () => router.navigate('/songs') };
+          }
+          return item;
+        });
+        return { ...section, items };
+      });
+      
+      sidebar.sections = transformedSections;
 
+      // Fetch songs data
       const songsResponse = await fetch('data/songs.json');
       const songsData = await songsResponse.json();
+      
+      // Set songs data for router
+      router.songs = songsData.songs;
 
-      // Create Songs section with dynamically generated song-lines
-      if (songsData.songs && songsData.songs.length > 0) {
-        songsData.songs.forEach(song => {
-          const songLine = document.createElement('song-line');
-          songLine.details = song;
-          songLine.addEventListener('click', (event) => {
-            // Create player data object from event details
-            const songLine = event.target.details;
-            
-            const data = {
-              src: songLine.audioUrl,
-              imageSrc: songLine.imageSrc,
-              title: songLine.title,
-              artist: songLine.artist,
-              album: songLine.album,
-              year: songLine.year,
-              isPlaying: true
-            };
-
-            // Update the player details (single update)
-            player.details = data;
-          });
-            content.appendChild(songLine);
-        });
-      }
-
-      // Fetch album and song data
+      // Fetch albums data
       const albumsResponse = await fetch('data/albums.json');
       const albumsData = await albumsResponse.json();
+      
+      // Set albums data for router
+      router.albums = albumsData;
+      
+      // Connect player to router
+      router.player = player;
 
-      // Create Featured Albums section
+      // Populate home page with sections
+      // Featured Albums section
       if (albumsData.featured && albumsData.featured.length > 0) {
         const featuredSection = document.createElement('music-section');
         featuredSection.title = "Featured Albums";
         featuredSection.albums = albumsData.featured;
-        content.appendChild(featuredSection);
+        homePage.appendChild(featuredSection);
       }
 
-      // Create New Releases section
+      // New Releases section
       if (albumsData.newReleases && albumsData.newReleases.length > 0) {
         const newReleasesSection = document.createElement('music-section');
         newReleasesSection.title = "New Releases";
         newReleasesSection.albums = albumsData.newReleases;
-        content.appendChild(newReleasesSection);
+        homePage.appendChild(newReleasesSection);
       }
 
-      // Create Recommended section
+      // Recommended section
       if (albumsData.recommended && albumsData.recommended.length > 0) {
         const recommendedSection = document.createElement('music-section');
         recommendedSection.title = "Recommended";
         recommendedSection.albums = albumsData.recommended;
-        content.appendChild(recommendedSection);
+        homePage.appendChild(recommendedSection);
       }
     };
+
+    // Handle route changes with parameters
+    router.addEventListener('route-params-changed', (event) => {
+      const { params, routeName } = event.detail;
+      
+      if (routeName === 'album-detail' && params.id) {
+        const albumId = params.id;
+        const albumDetailComponent = router.querySelector('.router-outlet > div');
+        
+        // Find the album by ID from all album collections
+        const allAlbums = [
+          ...(router.albums.featured || []),
+          ...(router.albums.newReleases || []),
+          ...(router.albums.recommended || [])
+        ];
+        const album = allAlbums.find(a => a.id === albumId);
+        
+        if (album) {
+          // Render album details
+          albumDetailComponent.innerHTML = `
+            <div class="album-detail">
+              <div class="album-header">
+                <img src="${album.imageSrc}" alt="${album.title}" />
+                <div class="album-info">
+                  <h1>${album.title}</h1>
+                  <h3>${album.artist} • ${album.subTitle}</h3>
+                </div>
+              </div>
+              <div class="album-songs"></div>
+            </div>
+          `;
+          
+          // Add songs for this album
+          const albumSongs = router.songs.filter(song => song.albumId === albumId);
+          const songsContainer = albumDetailComponent.querySelector('.album-songs');
+          
+          if (songsContainer) {
+            albumSongs.forEach(song => {
+              const songLine = document.createElement('song-line');
+              songLine.details = song;
+              songLine.addEventListener('click', () => router.playSong(song));
+              songsContainer.appendChild(songLine);
+            });
+          }
+        } else {
+          albumDetailComponent.innerHTML = '<div>Album not found</div>';
+        }
+      }
+    });
+
+    // When currentPage changes, handle page-specific updates
+    router.addEventListener('currentPageChanged', (e) => {
+      if (router.currentPage === 'songs') {
+        // Populate songs page if it's currently displayed
+        const songsContainer = songsPage;
+        songsContainer.innerHTML = '<h2>All Songs</h2>';
+        
+        router.songs.forEach(song => {
+          const songLine = document.createElement('song-line');
+          songLine.details = song;
+          songLine.addEventListener('click', () => router.playSong(song));
+          songsContainer.appendChild(songLine);
+        });
+      }
+    });
+
+    // Handle album selection from any music-album component
+    document.addEventListener('album-selected', (e) => {
+      const allAlbums = [
+        ...(router.albums.featured || []),
+        ...(router.albums.newReleases || []),
+        ...(router.albums.recommended || [])
+      ];
+      
+      const album = allAlbums.find(a => a.title === e.detail.title && a.imageSrc === e.detail.imageSrc);
+      if (album) {
+        router.navigate(`/album/${album.id}`);
+      }
+    });
 
     // Execute the data fetching immediately
     fetchData();
