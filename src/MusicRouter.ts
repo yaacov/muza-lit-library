@@ -1,6 +1,6 @@
-import { LitElement, html } from 'lit';
+import { LitElement, html, css } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
-import { Router } from '@lit-labs/router';
+import { Router, RouteConfig, PathRouteConfig } from '@lit-labs/router';
 import type { SongDetails } from './models';
 
 // Define interfaces for album data structure
@@ -39,8 +39,28 @@ interface MusicPlayer {
   updateVolume?: (volume: number) => void;
 }
 
+// Our custom route configuration interface
+export interface CustomRouteConfig {
+  path: string;
+  name: string;
+  component: HTMLElement | (() => HTMLElement);
+  // For parameterized routes
+  params?: Record<string, string>;
+}
+
 @customElement('music-router')
 export class MusicRouter extends LitElement {
+  static styles = css`
+    :host {
+      display: block;
+      width: var(--muza-router-width, 100%);
+    }
+
+    .router-outlet {
+      width: 100%;
+    }
+  `;
+
   @property({ type: Object })
   albums: AlbumCollection = {
     featured: [],
@@ -54,184 +74,76 @@ export class MusicRouter extends LitElement {
   @property({ type: Object })
   player: MusicPlayer | null = null;
 
+  // Array of route configurations
+  @property({ type: Array })
+  routes: CustomRouteConfig[] = [];
+
   // Keep track of currently selected page
   @property({ type: String })
   currentPage = 'home';
 
-  // Reference to the router
-  private router: Router;
+  // Reference to the router - initialized in constructor
+  private router: Router = new Router(this, []);
 
   constructor() {
     super();
-
-    // Initialize router with routes
-    this.router = new Router(this, [
-      {
-        path: '/',
-        render: () => {
-          this.currentPage = 'home';
-          return this.renderHomePage();
-        },
-      },
-      {
-        path: '/explore',
-        render: () => {
-          this.currentPage = 'explore';
-          return this.renderExplorePage();
-        },
-      },
-      {
-        path: '/playlists',
-        render: () => {
-          this.currentPage = 'playlists';
-          return this.renderPlaylistsPage();
-        },
-      },
-      {
-        path: '/albums',
-        render: () => {
-          this.currentPage = 'albums';
-          return this.renderAlbumsPage();
-        },
-      },
-      {
-        path: '/artists',
-        render: () => {
-          this.currentPage = 'artists';
-          return this.renderArtistsPage();
-        },
-      },
-      {
-        path: '/songs',
-        render: () => {
-          this.currentPage = 'songs';
-          return this.renderSongsPage();
-        },
-      },
-      {
-        path: '/album/:id',
-        render: (params) => {
-          this.currentPage = 'album-detail';
-          return this.renderAlbumDetail(params.id || '');
-        },
-      },
-    ]);
   }
 
-  // Main home page with all sections
-  private renderHomePage() {
-    return html`
-      <div class="home-content">
-        <slot name="home-content"></slot>
-      </div>
-    `;
+  connectedCallback() {
+    super.connectedCallback();
+    this.initializeRouter();
   }
 
-  // Song listing page
-  private renderSongsPage() {
-    // Move map operation outside of template
-    const songElements = this.songs.map((song) => this.renderSong(song));
-
-    return html`
-      <div class="songs-content">
-        <h2>All Songs</h2>
-        <div id="songs-container">${songElements}</div>
-      </div>
-    `;
-  }
-
-  // Album listing page
-  private renderAlbumsPage() {
-    // Get albums from all categories
-    const featuredAlbums = this.albums.featured || [];
-    const newReleases = this.albums.newReleases || [];
-    const recommended = this.albums.recommended || [];
-    const allAlbums = [...featuredAlbums, ...newReleases, ...recommended];
-
-    // Move map operation outside of template
-    const albumElements = allAlbums.map(
-      (album) => html`
-        <music-album
-          image-src=${album.imageSrc}
-          title=${album.title}
-          sub-title=${album.subTitle}
-          @album-selected=${() => this.navigateToAlbum(album.id)}
-        >
-        </music-album>
-      `
-    );
-
-    return html`
-      <div class="albums-content">
-        <h2>All Albums</h2>
-        <div class="albums-grid">${albumElements}</div>
-      </div>
-    `;
-  }
-
-  // Album detail page
-  private renderAlbumDetail(id: string) {
-    // Find album by id from all categories
-    const featuredAlbums = this.albums.featured || [];
-    const newReleases = this.albums.newReleases || [];
-    const recommended = this.albums.recommended || [];
-    const allAlbums = [...featuredAlbums, ...newReleases, ...recommended];
-    const album = allAlbums.find((a) => a.id === id);
-
-    if (!album) {
-      return html`<div>Album not found</div>`;
+  updated(changedProps: Map<string, unknown>) {
+    if (changedProps.has('routes') && this.routes.length > 0) {
+      this.initializeRouter();
     }
-
-    // Get songs for this album
-    const albumSongs = this.songs.filter((song) => song.albumId === id);
-
-    // Move map operation outside of template
-    const songElements = albumSongs.map((song) => this.renderSong(song));
-
-    return html`
-      <div class="album-detail">
-        <div class="album-header">
-          <img src=${album.imageSrc} alt=${album.title} />
-          <div class="album-info">
-            <h1>${album.title}</h1>
-            <h3>${album.artist} • ${album.subTitle}</h3>
-          </div>
-        </div>
-
-        <div class="album-songs">${songElements}</div>
-      </div>
-    `;
   }
 
-  // Template placeholders for other routes
-  private renderExplorePage() {
-    return html`<h2>Explore Music</h2>
-      <p>Discover new music here...</p>`;
+  // Initialize router with the provided routes
+  private initializeRouter() {
+    if (!this.routes || this.routes.length === 0) return;
+
+    // Convert our custom route config to the format expected by Router
+    const routerConfig: RouteConfig[] = this.routes.map(routeConfig => {
+      const pathConfig: PathRouteConfig = {
+        path: routeConfig.path,
+        render: (params: { [key: string]: string | undefined }) => {
+          this.currentPage = routeConfig.name;
+          
+          // Handle component function or element
+          let component;
+          if (typeof routeConfig.component === 'function') {
+            component = routeConfig.component();
+          } else {
+            component = routeConfig.component;
+          }
+
+          // If it's a parameterized route, dispatch event with params
+          if (routeConfig.path.includes(':')) {
+            this.dispatchEvent(new CustomEvent('route-params-changed', {
+              detail: { 
+                params: params as Record<string, string>, 
+                routeName: routeConfig.name 
+              },
+              bubbles: true,
+              composed: true
+            }));
+          }
+
+          return component;
+        }
+      };
+
+      return pathConfig;
+    });
+
+    // Initialize router with new config
+    this.router = new Router(this, routerConfig);
   }
 
-  private renderPlaylistsPage() {
-    return html`<h2>Your Playlists</h2>
-      <p>Playlists will appear here...</p>`;
-  }
-
-  private renderArtistsPage() {
-    return html`<h2>Artists</h2>
-      <p>Your favorite artists will appear here...</p>`;
-  }
-
-  // Helper method to render a song with click handler
-  private renderSong(song: ExtendedSongDetails) {
-    // Type cast the element to include details property
-    const songLine = document.createElement('song-line') as HTMLElement & {
-      details: ExtendedSongDetails;
-    };
-    songLine.details = song;
-    songLine.addEventListener('click', () => this.playSong(song));
-    return songLine;
-  }
-
-  // Method to play a song - preserves the existing music playing logic
-  private playSong(song: ExtendedSongDetails) {
+  // Method to play a song
+  playSong(song: ExtendedSongDetails) {
     if (!this.player || !song) return;
 
     const data = {
@@ -248,43 +160,13 @@ export class MusicRouter extends LitElement {
     this.player.details = data;
   }
 
-  // Navigation methods
-  navigateToHome() {
-    window.history.pushState({}, '', '/');
-    this.router.goto('/');
-  }
-
-  navigateToExplore() {
-    window.history.pushState({}, '', '/explore');
-    this.router.goto('/explore');
-  }
-
-  navigateToPlaylists() {
-    window.history.pushState({}, '', '/playlists');
-    this.router.goto('/playlists');
-  }
-
-  navigateToAlbums() {
-    window.history.pushState({}, '', '/albums');
-    this.router.goto('/albums');
-  }
-
-  navigateToArtists() {
-    window.history.pushState({}, '', '/artists');
-    this.router.goto('/artists');
-  }
-
-  navigateToSongs() {
-    window.history.pushState({}, '', '/songs');
-    this.router.goto('/songs');
-  }
-
-  navigateToAlbum(id: string) {
-    window.history.pushState({}, '', `/album/${id}`);
-    this.router.goto(`/album/${id}`);
+  // Generic navigation method
+  navigate(path: string) {
+    window.history.pushState({}, '', path);
+    this.router.goto(path);
   }
 
   render() {
-    return html`<div class="router-outlet">${this.router.outlet()}</div>`;
+    return html`<div class="router-outlet">${this.router ? this.router.outlet() : html`<slot></slot>`}</div>`;
   }
 }
