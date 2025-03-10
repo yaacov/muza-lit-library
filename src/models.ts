@@ -7,4 +7,6 @@ export interface SongDetails {
   audioUrl?: string;
   album?: string;
   year?: number;
+  id?: string;
+  isPlaying?: boolean;
 }

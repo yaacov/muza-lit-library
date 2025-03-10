@@ -1,6 +1,7 @@
 import { LitElement, html, css } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import type { SongDetails } from './models';
+import { formatSongNumber } from './utils';
 
 @customElement('song-line')
 export class SongLine extends LitElement {
@@ -14,14 +15,13 @@ export class SongLine extends LitElement {
     album: '',
     year: 0,
   };
-
   static styles = css`
     :host {
       --primary-text-color: var(--muza-primary-text-color, #000000);
       --secondary-text-color: var(--muza-secondary-text-color, #5f5f5f);
       --tertiary-text-color: var(--muza-tertiary-text-color, #888888);
       --border-color: var(--muza-border-color, #a9a9a9);
-      --hover-background: var(--muza-hover-background, #ededed);
+      --hover-background: var(--muza-buttons-color, #ededed);
       --song-title-font-size: var(--muza-songline-title-font-size, 16px);
       --song-number-font-size: var(--muza-songline-number-font-size, 14px);
       --song-duration-font-size: var(--muza-songline-duration-font-size, 14px);
@@ -36,19 +36,6 @@ export class SongLine extends LitElement {
       height: var(--song-line-height);
       cursor: default;
     }
-
-    :host(:hover) {
-      background: var(--hover-background);
-    }
-
-    :host(:hover) .track-number {
-      display: none;
-    }
-
-    :host(:hover) .play-icon {
-      display: inline-block;
-    }
-
     .song-container {
       display: flex;
       align-items: center;
@@ -89,11 +76,54 @@ export class SongLine extends LitElement {
       font-weight: bold;
       font-size: var(--song-duration-font-size);
     }
-  `;
+    .wave-container {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 3px;
+      width: 20px;
+      height: 20px;
+      margin-right: 8px;
+    }
 
-  private formatSongNumber(number: number): string {
-    return String(number).padStart(2, '0');
-  }
+    .bar {
+      width: 30%;
+      height: 100%;
+      border-radius: 5px;
+      animation: wave 1s infinite ease-in-out;
+      background-color: var(--tertiary-text-color);
+    }
+
+    .bar:nth-child(0) {
+      animation-delay: 0s;
+    }
+    .bar:nth-child(1) {
+      animation-delay: 0.2s;
+    }
+    .bar:nth-child(3) {
+      animation-delay: 0.4s;
+    }
+
+    @keyframes wave {
+      0%,
+      100% {
+        height: 40%;
+      }
+      50% {
+        height: 90%;
+      }
+    }
+
+    :host(:hover) {
+      background: var(--hover-background);
+    }
+    :host(:hover) .track-number {
+      display: none;
+    }
+    :host(:hover) .play-icon {
+      display: inline-block;
+    }
+  `;
 
   private formatDuration(seconds: number): string {
     const minutes = Math.round(seconds / 60);
@@ -101,6 +131,22 @@ export class SongLine extends LitElement {
     return `${String(minutes).padStart(2, '0')}:${String(
       remainingSeconds
     ).padStart(2, '0')}`;
+  }
+  private renderIcon() {
+    return this.details.isPlaying
+      ? html`
+          <div class="wave-container">
+            <div class="bar"></div>
+            <div class="bar"></div>
+            <div class="bar"></div>
+          </div>
+        `
+      : html` <span class="track-number"
+            >${formatSongNumber(this.details.index || 1)}</span
+          >
+          <span class="play-icon">
+            <i class="fa-solid fa-play"></i>
+          </span>`;
   }
 
   render() {
@@ -111,12 +157,7 @@ export class SongLine extends LitElement {
       />
       <div class="song-container">
         <div class="track-info">
-          <span class="track-number"
-            >${this.formatSongNumber(this.details.index || 1)}</span
-          >
-          <span class="play-icon">
-            <i class="fa-solid fa-play"></i>
-          </span>
+          ${this.renderIcon()}
           <span class="track-title">${this.details.title}</span>
         </div>
         <span class="track-duration"

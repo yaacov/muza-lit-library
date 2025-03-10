@@ -6,3 +6,4 @@ export { VolumeControl } from './VolumeControl';
 export { SongLine } from './SongLine';
 export { MusicPlayer } from './MusicPlayer';
 export { MusicRouter } from './MusicRouter';
+export { AlbumDetails } from './AlbumDetails';

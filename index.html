@@ -120,6 +120,7 @@
     import "./src/SongLine.ts"
     import "./src/MusicPlayer.ts";
     import "./src/MusicRouter.ts";
+    import "./src/AlbumDetails.ts"
 
     const sidebar = document.getElementById('sidebar');
     const router = document.getElementById('router');
@@ -187,12 +188,14 @@
 
       // Populate home page with sections
       // Featured Albums section
+
       if (albumsData.featured && albumsData.featured.length > 0) {
         const featuredSection = document.createElement('music-section');
         featuredSection.title = "Featured Albums";
         featuredSection.albums = albumsData.featured;
         homePage.appendChild(featuredSection);
       }
+      
 
       // New Releases section
       if (albumsData.newReleases && albumsData.newReleases.length > 0) {
