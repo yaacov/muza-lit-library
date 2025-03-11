@@ -66,120 +66,122 @@
 <body>
   <music-sidebar logo-src="art/logo.jpg" logo-alt="Music Library" id="sidebar">
   </music-sidebar>
-  
+
   <div class="main">
     <music-topbar></music-topbar>
-    
+
     <div class="content" id="content">
       <!-- Content will be generated dynamically -->
     </div>
-    <music-playlist id="sidelist"></music-side-list>
+
+    <music-playlist id="sidelist"></music-playlist>
     <music-player id="player"></music-player>
+  </div>
+  
+  <script type="module">
+    import "./src/MusicAlbum.ts";
+    import "./src/MusicSection.ts";
+    import "./src/MusicSidebar.ts";
+    import "./src/SongDetails.ts";
+    import "./src/MusicTopbar.ts";
+    export { AlbumDetails } from './src/AlbumDetails';
+    import "./src/SongLine.ts"
+    import "./src/MusicPlayer.ts";
+    import "./src/MusicPlaylist.ts";
+    import "./src/PlaylistItem.ts";
+    import "./src/SmallAlbumDetails.ts";
+    import "./src/MuzaButton.ts";
+    import "./src/MusicSuggestionsList.ts";
+    import "./src/SuggestionsListItem.ts";
 
-    <script type="module">
-      import "./src/MusicAlbum.ts";
-      import "./src/MusicSection.ts";
-      import "./src/MusicSidebar.ts";
-      import "./src/SongDetails.ts";
-      import "./src/MusicTopbar.ts";
-      export { AlbumDetails } from './src/AlbumDetails';
-      import "./src/SongLine.ts"
-      import "./src/MusicPlayer.ts";
-      import "./src/MusicPlaylist.ts";
-      import "./src/PlaylistItem.ts";
-      import "./src/SmallAlbumDetails.ts";
-      import "./src/MuzaButton.ts";
-      import "./src/MusicSuggestionsList.ts";
-      import "./src/SuggestionsListItem.ts";
+    const sidebar = document.getElementById('sidebar');
+    const content = document.getElementById('content');
+    const player = document.getElementById('player');
+    const sideList = document.getElementById('sidelist');
 
-      const sidebar = document.getElementById('sidebar');
-      const content = document.getElementById('content');
-      const player = document.getElementById('player');
-      const sideList = document.getElementById('sidelist');
+    // Volume change handler
+    document.addEventListener("volume-change", (event) => {
+      player.updateVolume(event.detail.value / 100);
+    });
 
-      // Volume change handler
-      document.addEventListener("volume-change", (event) => {
-        player.updateVolume(event.detail.value / 100);
-      });
-
+    // Fetch sidebar data from JSON file
+    const fetchData = async () => {
       // Fetch sidebar data from JSON file
-      const fetchData = async () => {
-        // Fetch sidebar data from JSON file
-        const sidebarResponse = await fetch('data/sidebar.json');
-        const sidebarData = await sidebarResponse.json();
-        sidebar.sections = sidebarData.sections;
+      const sidebarResponse = await fetch('data/sidebar.json');
+      const sidebarData = await sidebarResponse.json();
+      sidebar.sections = sidebarData.sections;
 
-        const songsResponse = await fetch('data/songs.json');
-        const songsData = await songsResponse.json();
+      const songsResponse = await fetch('data/songs.json');
+      const songsData = await songsResponse.json();
 
-        sideList.songs = songsData.songs.slice(0,3);
-        sideList.suggestions = songsData.songs.slice(3,7);
-        
-        sideList.title = "playlist 3";
-        sideList.author = "me";
+      sideList.songs = songsData.songs.slice(0, 3);
+      sideList.suggestions = songsData.songs.slice(3, 7);
 
-        // Create Songs section with dynamically generated song-lines
-        if (songsData.songs && songsData.songs.length > 0) {
-          songsData.songs.forEach((song, index) => {
-            const songLine = document.createElement('song-line');
-            songLine.details = { ...song, isPlaying: (song.id == player.details.id), index: index + 1 };
-            songLine.addEventListener('click', (event) => {
-              // Create player data object from event details
+      sideList.title = "playlist 3";
+      sideList.author = "me";
 
-              const songLine = event.target.details;
+      // Create Songs section with dynamically generated song-lines
+      if (songsData.songs && songsData.songs.length > 0) {
+        songsData.songs.forEach((song, index) => {
+          const songLine = document.createElement('song-line');
+          songLine.details = { ...song, isPlaying: (song.id == player.details.id), index: index + 1 };
+          songLine.addEventListener('click', (event) => {
+            // Create player data object from event details
 
-              const data = {
-                src: songLine.audioUrl,
-                imageSrc: songLine.imageSrc,
-                title: songLine.title,
-                artist: songLine.artist,
-                album: songLine.album,
-                year: songLine.year,
-                isPlaying: true,
-                id: songLine.id
-              };
+            const songLine = event.target.details;
 
-              // Update the player details (single update)
-              player.details = data;
-            });
+            const data = {
+              src: songLine.audioUrl,
+              imageSrc: songLine.imageSrc,
+              title: songLine.title,
+              artist: songLine.artist,
+              album: songLine.album,
+              year: songLine.year,
+              isPlaying: true,
+              id: songLine.id
+            };
 
-            content.appendChild(songLine);
+            // Update the player details (single update)
+            player.details = data;
           });
-        }
 
-        // Fetch album and song data
-        const albumsResponse = await fetch('data/albums.json');
-        const albumsData = await albumsResponse.json();
+          content.appendChild(songLine);
+        });
+      }
 
-        // Create Featured Albums section
-        if (albumsData.featured && albumsData.featured.length > 0) {
-          const featuredSection = document.createElement('music-section');
-          featuredSection.title = "Featured Albums";
-          featuredSection.albums = albumsData.featured;
-          content.appendChild(featuredSection);
+      // Fetch album and song data
+      const albumsResponse = await fetch('data/albums.json');
+      const albumsData = await albumsResponse.json();
 
-        }
+      // Create Featured Albums section
+      if (albumsData.featured && albumsData.featured.length > 0) {
+        const featuredSection = document.createElement('music-section');
+        featuredSection.title = "Featured Albums";
+        featuredSection.albums = albumsData.featured;
+        content.appendChild(featuredSection);
 
-        // Create New Releases section
-        if (albumsData.newReleases && albumsData.newReleases.length > 0) {
-          const newReleasesSection = document.createElement('music-section');
-          newReleasesSection.title = "New Releases";
-          newReleasesSection.albums = albumsData.newReleases;
-          content.appendChild(newReleasesSection);
-        }
+      }
 
-        // Create Recommended section
-        if (albumsData.recommended && albumsData.recommended.length > 0) {
-          const recommendedSection = document.createElement('music-section');
-          recommendedSection.title = "Recommended";
-          recommendedSection.albums = albumsData.recommended;
-          content.appendChild(recommendedSection);
-        }
-      };
+      // Create New Releases section
+      if (albumsData.newReleases && albumsData.newReleases.length > 0) {
+        const newReleasesSection = document.createElement('music-section');
+        newReleasesSection.title = "New Releases";
+        newReleasesSection.albums = albumsData.newReleases;
+        content.appendChild(newReleasesSection);
+      }
 
-      // Execute the data fetching immediately
-      fetchData();
-    </script>
+      // Create Recommended section
+      if (albumsData.recommended && albumsData.recommended.length > 0) {
+        const recommendedSection = document.createElement('music-section');
+        recommendedSection.title = "Recommended";
+        recommendedSection.albums = albumsData.recommended;
+        content.appendChild(recommendedSection);
+      }
+    };
+
+    // Execute the data fetching immediately
+    fetchData();
+  </script>
 </body>
 
 </html>
