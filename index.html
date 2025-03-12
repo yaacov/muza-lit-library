@@ -70,8 +70,8 @@
   <div class="main">
     <music-topbar id="topbar"></music-topbar>
 
-    <div class="content">
-      <music-router id="router"></music-router>
+    <div class="content" id="content">
+      <!-- content -->
     </div>
   </div>
 
@@ -98,7 +98,7 @@
     import "./src/SuggestionsListItem.ts";
 
     const sidebar = document.getElementById('sidebar');
-    const router = document.getElementById('router');
+    const content = document.getElementById('content');
     const player = document.getElementById('player');
     const sideList = document.getElementById('sidelist');
 
@@ -198,86 +198,6 @@
         homePage.appendChild(recommendedSection);
       }
     };
-
-    // Handle route changes with parameters
-    router.addEventListener('route-params-changed', (event) => {
-      const { params, routeName } = event.detail;
-      
-      if (routeName === 'album-detail' && params.id) {
-        const albumId = params.id;
-        const albumDetailComponent = router.querySelector('.router-outlet > div');
-        
-        // Find the album by ID from all album collections
-        const allAlbums = [
-          ...(router.albums.featured || []),
-          ...(router.albums.newReleases || []),
-          ...(router.albums.recommended || [])
-        ];
-        const album = allAlbums.find(a => a.id === albumId);
-        
-        if (album) {
-          // Render album details
-          albumDetailComponent.innerHTML = `
-            <div class="album-detail">
-              <div class="album-header">
-                <img src="${album.imageSrc}" alt="${album.title}" />
-                <div class="album-info">
-                  <h1>${album.title}</h1>
-                  <h3>${album.artist} • ${album.subTitle}</h3>
-                </div>
-              </div>
-              <div class="album-songs"></div>
-            </div>
-          `;
-          
-          // Add songs for this album
-          const albumSongs = router.songs.filter(song => song.albumId === albumId);
-          const songsContainer = albumDetailComponent.querySelector('.album-songs');
-          
-          if (songsContainer) {
-            albumSongs.forEach(song => {
-              const songLine = document.createElement('song-line');
-              songLine.details = song;
-              songLine.addEventListener('click', () => router.playSong(song));
-              songsContainer.appendChild(songLine);
-            });
-          }
-        } else {
-          albumDetailComponent.innerHTML = '<div>Album not found</div>';
-        }
-      }
-    });
-
-    // When currentPage changes, handle page-specific updates
-    router.addEventListener('currentPageChanged', (e) => {
-      if (router.currentPage === 'songs') {
-        // Populate songs page if it's currently displayed
-        const songsContainer = songsPage;
-        songsContainer.innerHTML = '<h2>All Songs</h2>';
-        
-        router.songs.forEach(song => {
-          const songLine = document.createElement('song-line');
-          songLine.details = song;
-          songLine.addEventListener('click', () => router.playSong(song));
-          songsContainer.appendChild(songLine);
-        });
-      }
-    });
-
-    // Handle album selection from any music-album component
-    document.addEventListener('album-selected', (e) => {
-      const allAlbums = [
-        ...(router.albums.featured || []),
-        ...(router.albums.newReleases || []),
-        ...(router.albums.recommended || [])
-      ];
-      
-      const album = allAlbums.find(a => a.title === e.detail.title && a.imageSrc === e.detail.imageSrc);
-      if (album) {
-        router.navigate(`/album/${album.id}`);
-      }
-    });
-
     // Execute the data fetching immediately
     fetchData();
   </script>
