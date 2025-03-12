@@ -68,11 +68,12 @@
   </music-sidebar>
 
   <div class="main">
-    <music-topbar></music-topbar>
+    <music-topbar id="topbar"></music-topbar>
 
     <div class="content" id="content">
-      <!-- Content will be generated dynamically -->
+      <!-- content -->
     </div>
+  </div>
 
     <music-playlist id="sidelist"></music-playlist>
     <music-player id="player"></music-player>
@@ -87,6 +88,8 @@
     export { AlbumDetails } from './src/AlbumDetails';
     import "./src/SongLine.ts"
     import "./src/MusicPlayer.ts";
+    import "./src/MusicRouter.ts";
+    import "./src/AlbumDetails.ts"
     import "./src/MusicPlaylist.ts";
     import "./src/PlaylistItem.ts";
     import "./src/SmallAlbumDetails.ts";
@@ -104,16 +107,18 @@
       player.updateVolume(event.detail.value / 100);
     });
 
-    // Fetch sidebar data from JSON file
+    // Fetch data and set up router
     const fetchData = async () => {
       // Fetch sidebar data from JSON file
       const sidebarResponse = await fetch('data/sidebar.json');
       const sidebarData = await sidebarResponse.json();
       sidebar.sections = sidebarData.sections;
 
+      // Fetch songs data
       const songsResponse = await fetch('data/songs.json');
       const songsData = await songsResponse.json();
-
+      
+      // Set songs data for router
       sideList.songs = songsData.songs.slice(0, 3);
       sideList.suggestions = songsData.songs.slice(3, 7);
 
@@ -159,10 +164,9 @@
         featuredSection.title = "Featured Albums";
         featuredSection.albums = albumsData.featured;
         content.appendChild(featuredSection);
-
       }
 
-      // Create New Releases section
+      // New Releases section
       if (albumsData.newReleases && albumsData.newReleases.length > 0) {
         const newReleasesSection = document.createElement('music-section');
         newReleasesSection.title = "New Releases";
@@ -170,7 +174,7 @@
         content.appendChild(newReleasesSection);
       }
 
-      // Create Recommended section
+      // Recommended section
       if (albumsData.recommended && albumsData.recommended.length > 0) {
         const recommendedSection = document.createElement('music-section');
         recommendedSection.title = "Recommended";
@@ -178,7 +182,6 @@
         content.appendChild(recommendedSection);
       }
     };
-
     // Execute the data fetching immediately
     fetchData();
   </script>
