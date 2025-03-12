@@ -103,13 +103,16 @@
     const sideList = document.getElementById('sidelist');
 
     // Volume change handler
-    topbar.addEventListener("volume-change", (event) => {
+    document.addEventListener("volume-change", (event) => {
       player.updateVolume(event.detail.value / 100);
     });
 
     // Fetch data and set up router
     const fetchData = async () => {
-      sidebar.sections = transformedSections;
+      // Fetch sidebar data from JSON file
+      const sidebarResponse = await fetch('data/sidebar.json');
+      const sidebarData = await sidebarResponse.json();
+      sidebar.sections = sidebarData.sections;
 
       // Fetch songs data
       const songsResponse = await fetch('data/songs.json');
