@@ -7,6 +7,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
   <link rel="stylesheet" href="src/styles/variables.css">
+  <link rel="stylesheet" href="src/styles/scrollbar.css">
   <style>
     body {
       font-family: 'Google Sans', sans-serif;
@@ -44,12 +45,20 @@
       width: var(--muza-sidebar-width, 240px);
     }
 
-    music-topbar {
+    music-sidebar {
+      position: fixed;
+      left: 0;
+      top: 0;
+      height: 100vh;
+      width: var(--muza-sidebar-width, 240px);
+    }
+
+    music-playlist {
       position: fixed;
       right: 0;
       top: 0;
-      left: var(--muza-sidebar-width, 240px);
       z-index: 100;
+      background-color: white;
     }
   </style>
 </head>
@@ -65,21 +74,30 @@
       <!-- Content will be generated dynamically -->
     </div>
 
-  <music-player id="player"></music-player>
-
+    <music-playlist id="sidelist"></music-playlist>
+    <music-player id="player"></music-player>
+  </div>
+  
   <script type="module">
     import "./src/MusicAlbum.ts";
     import "./src/MusicSection.ts";
     import "./src/MusicSidebar.ts";
     import "./src/SongDetails.ts";
     import "./src/MusicTopbar.ts";
+    export { AlbumDetails } from './src/AlbumDetails';
     import "./src/SongLine.ts"
     import "./src/MusicPlayer.ts";
-    import "./src/AlbumDetails.ts"
-    
+    import "./src/MusicPlaylist.ts";
+    import "./src/PlaylistItem.ts";
+    import "./src/SmallAlbumDetails.ts";
+    import "./src/MuzaButton.ts";
+    import "./src/MusicSuggestionsList.ts";
+    import "./src/SuggestionsListItem.ts";
+
     const sidebar = document.getElementById('sidebar');
     const content = document.getElementById('content');
     const player = document.getElementById('player');
+    const sideList = document.getElementById('sidelist');
 
     // Volume change handler
     document.addEventListener("volume-change", (event) => {
@@ -96,16 +114,22 @@
       const songsResponse = await fetch('data/songs.json');
       const songsData = await songsResponse.json();
 
+      sideList.songs = songsData.songs.slice(0, 3);
+      sideList.suggestions = songsData.songs.slice(3, 7);
+
+      sideList.title = "playlist 3";
+      sideList.author = "me";
+
       // Create Songs section with dynamically generated song-lines
       if (songsData.songs && songsData.songs.length > 0) {
         songsData.songs.forEach((song, index) => {
           const songLine = document.createElement('song-line');
-          songLine.details = {...song, isPlaying: (song.id==player.details.id), index:index+1 };
+          songLine.details = { ...song, isPlaying: (song.id == player.details.id), index: index + 1 };
           songLine.addEventListener('click', (event) => {
             // Create player data object from event details
 
             const songLine = event.target.details;
-            
+
             const data = {
               src: songLine.audioUrl,
               imageSrc: songLine.imageSrc,
@@ -114,13 +138,13 @@
               album: songLine.album,
               year: songLine.year,
               isPlaying: true,
-              id:songLine.id
+              id: songLine.id
             };
 
             // Update the player details (single update)
             player.details = data;
           });
-          
+
           content.appendChild(songLine);
         });
       }
@@ -128,19 +152,15 @@
       // Fetch album and song data
       const albumsResponse = await fetch('data/albums.json');
       const albumsData = await albumsResponse.json();
-      if (albumsData.featured && albumsData.featured.length > 0) {
-        const details = document.createElement('album-details');
-        details.details = albumsData.featured[0]
-        content.prepend(details);
-      }
+
       // Create Featured Albums section
       if (albumsData.featured && albumsData.featured.length > 0) {
         const featuredSection = document.createElement('music-section');
         featuredSection.title = "Featured Albums";
         featuredSection.albums = albumsData.featured;
         content.appendChild(featuredSection);
+
       }
-      
 
       // Create New Releases section
       if (albumsData.newReleases && albumsData.newReleases.length > 0) {

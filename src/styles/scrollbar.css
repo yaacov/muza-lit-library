@@ -1,0 +1,19 @@
+    /* Scrollbar styles */
+::-webkit-scrollbar {
+    height: var(--muza-section-scrollbar-height, 6px);
+    width: var(--muza-section-scrollbar-height, 6px);
+}
+::-webkit-scrollbar-button {
+    width: 0px;
+    height: 0px;
+    background: var(--muza-section-scrollbar-button-bg, #eee);
+    border-radius: 100px;
+}
+::-webkit-scrollbar-album-piece {
+    background: var(--muza-section-scrollbar-track-bg, #c2c2c2);
+    border-radius: 100px;
+}
+::-webkit-scrollbar-thumb {
+    background: var(--muza-section-scrollbar-thumb-bg, #5f5f5f);
+    border-radius: 100px;
+}
