@@ -109,24 +109,6 @@
 
     // Fetch data and set up router
     const fetchData = async () => {
-      // Fetch sidebar data from JSON file
-      const sidebarResponse = await fetch('data/sidebar.json');
-      const sidebarData = await sidebarResponse.json();
-      
-      // Transform sidebar data to include navigation actions
-      const transformedSections = sidebarData.sections.map(section => {
-        const items = section.items.map(item => {
-          // Add action based on text
-          if (item.text === 'Home') {
-            return { ...item, action: () => router.navigate('/') };
-          } else if (item.text === 'Songs') {
-            return { ...item, action: () => router.navigate('/songs') };
-          }
-          return item;
-        });
-        return { ...section, items };
-      });
-      
       sidebar.sections = transformedSections;
 
       // Fetch songs data
@@ -134,7 +116,6 @@
       const songsData = await songsResponse.json();
       
       // Set songs data for router
-      router.songs = songsData.songs;
       sideList.songs = songsData.songs.slice(0, 3);
       sideList.suggestions = songsData.songs.slice(3, 7);
 
@@ -187,7 +168,7 @@
         const newReleasesSection = document.createElement('music-section');
         newReleasesSection.title = "New Releases";
         newReleasesSection.albums = albumsData.newReleases;
-        homePage.appendChild(newReleasesSection);
+        content.appendChild(newReleasesSection);
       }
 
       // Recommended section
@@ -195,7 +176,7 @@
         const recommendedSection = document.createElement('music-section');
         recommendedSection.title = "Recommended";
         recommendedSection.albums = albumsData.recommended;
-        homePage.appendChild(recommendedSection);
+        content.appendChild(recommendedSection);
       }
     };
     // Execute the data fetching immediately
